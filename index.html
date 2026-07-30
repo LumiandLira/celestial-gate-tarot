@@ -167,7 +167,7 @@
   </div>
 
   <script>
-    // รวมไพ่ทั้งหมด 78 ใบ (Major 22 + Minor 56)
+    // รายชื่อไพ่ทั้ง 78 ใบ (ชื่อไฟล์ตรงกับโฟลเดอร์ GitHub)
     const tarotDeck = [
       // Major Arcana (22)
       { name: "Celestial Gate", path: "assets/major/00_Celestial_Gate.jpg" },
@@ -194,82 +194,89 @@
       { name: "Judgement", path: "assets/major/21_Judgement.jpg" },
       { name: "The World", path: "assets/major/22_The_World.jpg" },
 
-      // Minor Arcana - Wands (14)
-      { name: "Ace of Wands", path: "assets/minor/Ace_of_Wands.jpg" },
-      { name: "Two of Wands", path: "assets/minor/Two_of_Wands.jpg" },
-      { name: "Three of Wands", path: "assets/minor/Three_of_Wands.jpg" },
-      { name: "Four of Wands", path: "assets/minor/Four_of_Wands.jpg" },
-      { name: "Five of Wands", path: "assets/minor/Five_of_Wands.jpg" },
-      { name: "Six of Wands", path: "assets/minor/Six_of_Wands.jpg" },
-      { name: "Seven of Wands", path: "assets/minor/Seven_of_Wands.jpg" },
-      { name: "Eight of Wands", path: "assets/minor/Eight_of_Wands.jpg" },
-      { name: "Nine of Wands", path: "assets/minor/Nine_of_Wands.jpg" },
-      { name: "Ten of Wands", path: "assets/minor/Ten_of_Wands.jpg" },
-      { name: "Page of Wands", path: "assets/minor/Page_of_Wands.jpg" },
-      { name: "Knight of Wands", path: "assets/minor/Knight_of_Wands.jpg" },
-      { name: "Queen of Wands", path: "assets/minor/Queen_of_Wands.jpg" },
-      { name: "King of Wands", path: "assets/minor/King_of_Wands.jpg" },
-
       // Minor Arcana - Cups (14)
-      { name: "Ace of Cups", path: "assets/minor/Ace_of_Cups.jpg" },
-      { name: "Two of Cups", path: "assets/minor/Two_of_Cups.jpg" },
-      { name: "Three of Cups", path: "assets/minor/Three_of_Cups.jpg" },
-      { name: "Four of Cups", path: "assets/minor/Four_of_Cups.jpg" },
-      { name: "Five of Cups", path: "assets/minor/Five_of_Cups.jpg" },
-      { name: "Six of Cups", path: "assets/minor/Six_of_Cups.jpg" },
-      { name: "Seven of Cups", path: "assets/minor/Seven_of_Cups.jpg" },
-      { name: "Eight of Cups", path: "assets/minor/Eight_of_Cups.jpg" },
-      { name: "Nine of Cups", path: "assets/minor/Nine_of_Cups.jpg" },
-      { name: "Ten of Cups", path: "assets/minor/Ten_of_Cups.jpg" },
-      { name: "Page of Cups", path: "assets/minor/Page_of_Cups.jpg" },
-      { name: "Knight of Cups", path: "assets/minor/Knight_of_Cups.jpg" },
-      { name: "Queen of Cups", path: "assets/minor/Queen_of_Cups.jpg" },
-      { name: "King of Cups", path: "assets/minor/King_of_Cups.jpg" },
-
-      // Minor Arcana - Swords (14)
-      { name: "Ace of Swords", path: "assets/minor/Ace_of_Swords.jpg" },
-      { name: "Two of Swords", path: "assets/minor/Two_of_Swords.jpg" },
-      { name: "Three of Swords", path: "assets/minor/Three_of_Swords.jpg" },
-      { name: "Four of Swords", path: "assets/minor/Four_of_Swords.jpg" },
-      { name: "Five of Swords", path: "assets/minor/Five_of_Swords.jpg" },
-      { name: "Six of Swords", path: "assets/minor/Six_of_Swords.jpg" },
-      { name: "Seven of Swords", path: "assets/minor/Seven_of_Swords.jpg" },
-      { name: "Eight of Swords", path: "assets/minor/Eight_of_Swords.jpg" },
-      { name: "Nine of Swords", path: "assets/minor/Nine_of_Swords.jpg" },
-      { name: "Ten of Swords", path: "assets/minor/Ten_of_Swords.jpg" },
-      { name: "Page of Swords", path: "assets/minor/Page_of_Swords.jpg" },
-      { name: "Knight of Swords", path: "assets/minor/Knight_of_Swords.jpg" },
-      { name: "Queen of Swords", path: "assets/minor/Queen_of_Swords.jpg" },
-      { name: "King of Swords", path: "assets/minor/King_of_Swords.jpg" },
+      { name: "Ace of Cups", path: "assets/minor/Cups_Ace.jpg" },
+      { name: "Two of Cups", path: "assets/minor/Cups_Two.jpg" },
+      { name: "Three of Cups", path: "assets/minor/Cups_Three.jpg" },
+      { name: "Four of Cups", path: "assets/minor/Cups_Four.jpg" },
+      { name: "Five of Cups", path: "assets/minor/Cups_Five.jpg" },
+      { name: "Six of Cups", path: "assets/minor/Cups_Six.jpg" },
+      { name: "Seven of Cups", path: "assets/minor/Cups_Seven.jpg" },
+      { name: "Eight of Cups", path: "assets/minor/Cups_Eight.jpg" },
+      { name: "Nine of Cups", path: "assets/minor/Cups_Nine.jpg" },
+      { name: "Ten of Cups", path: "assets/minor/Cups_Ten.jpg" },
+      { name: "Page of Cups", path: "assets/minor/Cups_Page.jpg" },
+      { name: "Knight of Cups", path: "assets/minor/Cups_Knight.jpg" },
+      { name: "Queen of Cups", path: "assets/minor/Cups_Queen.jpg" },
+      { name: "King of Cups", path: "assets/minor/Cups_King.jpg" },
 
       // Minor Arcana - Pentacles (14)
-      { name: "Ace of Pentacles", path: "assets/minor/Ace_of_Pentacles.jpg" },
-      { name: "Two of Pentacles", path: "assets/minor/Two_of_Pentacles.jpg" },
-      { name: "Three of Pentacles", path: "assets/minor/Three_of_Pentacles.jpg" },
-      { name: "Four of Pentacles", path: "assets/minor/Four_of_Pentacles.jpg" },
-      { name: "Five of Pentacles", path: "assets/minor/Five_of_Pentacles.jpg" },
-      { name: "Six of Pentacles", path: "assets/minor/Six_of_Pentacles.jpg" },
-      { name: "Seven of Pentacles", path: "assets/minor/Seven_of_Pentacles.jpg" },
-      { name: "Eight of Pentacles", path: "assets/minor/Eight_of_Pentacles.jpg" },
-      { name: "Nine of Pentacles", path: "assets/minor/Nine_of_Pentacles.jpg" },
-      { name: "Ten of Pentacles", path: "assets/minor/Ten_of_Pentacles.jpg" },
-      { name: "Page of Pentacles", path: "assets/minor/Page_of_Pentacles.jpg" },
-      { name: "Knight of Pentacles", path: "assets/minor/Knight_of_Pentacles.jpg" },
-      { name: "Queen of Pentacles", path: "assets/minor/Queen_of_Pentacles.jpg" },
-      { name: "King of Pentacles", path: "assets/minor/King_of_Pentacles.jpg" }
+      { name: "Ace of Pentacles", path: "assets/minor/Pentacles_Ace.jpg" },
+      { name: "Two of Pentacles", path: "assets/minor/Pentacles_Two.jpg" },
+      { name: "Three of Pentacles", path: "assets/minor/Pentacles_Three.jpg" },
+      { name: "Four of Pentacles", path: "assets/minor/Pentacles_Four.jpg" },
+      { name: "Five of Pentacles", path: "assets/minor/Pentacles_Five.jpg" },
+      { name: "Six of Pentacles", path: "assets/minor/Pentacles_Six.jpg" },
+      { name: "Seven of Pentacles", path: "assets/minor/Pentacles_Seven.jpg" },
+      { name: "Eight of Pentacles", path: "assets/minor/Pentacles_Eight.jpg" },
+      { name: "Nine of Pentacles", path: "assets/minor/Pentacles_Nine.jpg" },
+      { name: "Ten of Pentacles", path: "assets/minor/Pentacles_Ten.jpg" },
+      { name: "Page of Pentacles", path: "assets/minor/Pentacles_Page.jpg" },
+      { name: "Knight of Pentacles", path: "assets/minor/Pentacles_Knight.jpg" },
+      { name: "Queen of Pentacles", path: "assets/minor/Pentacles_Queen.jpg" },
+      { name: "King of Pentacles", path: "assets/minor/Pentacles_King.jpg" },
+
+      // Minor Arcana - Swords (14)
+      { name: "Ace of Swords", path: "assets/minor/Swords_Ace.jpg" },
+      { name: "Two of Swords", path: "assets/minor/Swords_Two.jpg" },
+      { name: "Three of Swords", path: "assets/minor/Swords_Three.jpg" },
+      { name: "Four of Swords", path: "assets/minor/Swords_Four.jpg" },
+      { name: "Five of Swords", path: "assets/minor/Swords_Five.jpg" },
+      { name: "Six of Swords", path: "assets/minor/Swords_Six.jpg" },
+      { name: "Seven of Swords", path: "assets/minor/Swords_Seven.jpg" },
+      { name: "Eight of Swords", path: "assets/minor/Swords_Eight.jpg" },
+      { name: "Nine of Swords", path: "assets/minor/Swords_Nine.jpg" },
+      { name: "Ten of Swords", path: "assets/minor/Swords_Ten.jpg" },
+      { name: "Page of Swords", path: "assets/minor/Swords_Page.jpg" },
+      { name: "Knight of Swords", path: "assets/minor/Swords_Knight.jpg" },
+      { name: "Queen of Swords", path: "assets/minor/Swords_Queen.jpg" },
+      { name: "King of Swords", path: "assets/minor/Swords_King.jpg" },
+
+      // Minor Arcana - Wands (14)
+      { name: "Ace of Wands", path: "assets/minor/Wands_Ace.jpg" },
+      { name: "Two of Wands", path: "assets/minor/Wands_Two.jpg" },
+      { name: "Three of Wands", path: "assets/minor/Wands_Three.jpg" },
+      { name: "Four of Wands", path: "assets/minor/Wands_Four.jpg" },
+      { name: "Five of Wands", path: "assets/minor/Wands_Five.jpg" },
+      { name: "Six of Wands", path: "assets/minor/Wands_Six.jpg" },
+      { name: "Seven of Wands", path: "assets/minor/Wands_Seven.jpg" },
+      { name: "Eight of Wands", path: "assets/minor/Wands_Eight.jpg" },
+      { name: "Nine of Wands", path: "assets/minor/Wands_Nine.jpg" },
+      { name: "Ten of Wands", path: "assets/minor/Wands_Ten.jpg" },
+      { name: "Page of Wands", path: "assets/minor/Wands_Page.jpg" },
+      { name: "Knight of Wands", path: "assets/minor/Wands_Knight.jpg" },
+      { name: "Queen of Wands", path: "assets/minor/Wands_Queen.jpg" },
+      { name: "King of Wands", path: "assets/minor/Wands_King.jpg" }
     ];
 
-    function getRandomCard() {
-      const randomIndex = Math.floor(Math.random() * tarotDeck.length);
-      return tarotDeck[randomIndex];
+    // ฟังก์ชันสับสำรับ (Shuffle) ป้องกันไพ่ซ้ำกัน 100%
+    function getShuffledDeck() {
+      const shuffled = [...tarotDeck];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
     }
 
     function drawCards(count) {
       const display = document.getElementById('cardsDisplay');
       display.innerHTML = '';
 
+      const deck = getShuffledDeck();
+
       for (let i = 0; i < count; i++) {
-        const card = getRandomCard();
+        const card = deck[i];
         
         const cardDiv = document.createElement('div');
         cardDiv.className = 'card-item';
