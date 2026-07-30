@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Celestial Gate Tarot</title>
+<style>
+:root{
+  --bg:#05040d; --panel:#100c25; --gold:#d7b86a; --violet:#9c6fbe;
+  --text:#fff; --muted:#c9c1d9;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text)}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  -webkit-tap-highlight-color:transparent;
+}
+main{
+  min-height:100vh;
+  padding:calc(18px + env(safe-area-inset-top)) 16px calc(34px + env(safe-area-inset-bottom));
+  text-align:center;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 7%,rgba(115,72,175,.34),transparent 28%),
+    radial-gradient(circle at 15% 35%,rgba(65,48,130,.18),transparent 26%),
+    radial-gradient(circle at 85% 45%,rgba(123,77,156,.14),transparent 24%),
+    linear-gradient(#080615,#05040d 72%);
+}
+.gate-mark{
+  width:68px;height:68px;margin:2px auto 10px;border-radius:50%;
+  border:1px solid rgba(215,184,106,.45);
+  box-shadow:0 0 34px rgba(156,111,190,.32),inset 0 0 22px rgba(215,184,106,.12);
+  display:grid;place-items:center;font-size:25px;
+}
+.sub{font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.72}
+h1{
+  font-family:Georgia,serif;font-weight:500;letter-spacing:.09em;
+  margin:7px 0 3px;font-size:clamp(27px,6vw,40px);
+}
+.tagline{color:var(--muted);font-size:14px;letter-spacing:.03em}
+#opening{
+  display:block;width:min(260px,58vw);aspect-ratio:7/12;object-fit:cover;
+  margin:18px auto 16px;border-radius:16px;
+  box-shadow:0 18px 65px rgba(0,0,0,.7),0 0 32px rgba(156,111,190,.18);
+}
+.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin:5px auto 4px}
+button{
+  appearance:none;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.07);color:white;border-radius:999px;
+  padding:12px 17px;font-size:14px;min-height:44px;
+  box-shadow:0 6px 20px rgba(0,0,0,.18);
+}
+button.primary{
+  background:linear-gradient(135deg,var(--gold),var(--violet));
+  border:0;font-weight:700;color:#fff;
+}
+button:active{transform:scale(.98)}
+button:disabled{opacity:.42}
+.hint{min-height:20px;margin:8px 0 0;color:#aaa2ba;font-size:12px}
+#spread{
+  display:flex;gap:clamp(12px,4vw,24px);justify-content:center;align-items:flex-start;
+  flex-wrap:nowrap;margin:24px auto 0;max-width:900px;
+}
+.slot{width:min(205px,30vw);min-width:102px}
+.card{
+  position:relative;width:100%;aspect-ratio:7/12;cursor:pointer;
+  perspective:1200px;touch-action:manipulation;
+  -webkit-user-select:none;user-select:none;
+}
+.card-inner{
+  position:absolute;inset:0;
+  transform-style:preserve-3d;
+  -webkit-transform-style:preserve-3d;
+  transition:transform .85s cubic-bezier(.2,.8,.2,1);
+  -webkit-transition:-webkit-transform .85s cubic-bezier(.2,.8,.2,1);
+  will-change:transform;
+}
+.card.revealed .card-inner{
+  transform:rotateY(180deg);
+  -webkit-transform:rotateY(180deg);
+}
+.face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:14px;overflow:hidden;box-shadow:0 15px 40px rgba(0,0,0,.62);
+}
+.face img{width:100%;height:100%;display:block;object-fit:cover}
+.back{position:relative}
+.tap-badge{
+  position:absolute;left:50%;bottom:7%;transform:translateX(-50%);
+  padding:7px 10px;border:1px solid rgba(255,255,255,.28);
+  border-radius:999px;background:rgba(0,0,0,.48);
+  color:#fff;font-size:9px;letter-spacing:.15em;white-space:nowrap;
+  pointer-events:none;
+}
+.front{transform:rotateY(180deg)}
+.card:not(.revealed):hover .back{box-shadow:0 0 30px rgba(156,111,190,.24),0 15px 40px rgba(0,0,0,.62)}
+.name{
+  font-family:Georgia,serif;font-size:14px;line-height:1.25;
+  margin-top:9px;min-height:36px;color:#eee7f5;
+}
+.position{
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:#8f879e;margin-top:3px;
+}
+#session{display:none;margin:18px auto 0;color:#b9b0c8;font-size:12px}
+footer{opacity:.45;font-size:10px;margin-top:30px;letter-spacing:.04em}
+@media (max-width:600px){
+  #opening{width:min(230px,56vw)}
+  #spread{gap:10px}
+  .slot{width:30vw}
+  .name{font-size:12px}
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="gate-mark" aria-hidden="true">✦</div>
+  <div class="sub">Celestial Gate Tarot</div>
+  <h1>Open the Gate</h1>
+  <div class="tagline">Enter quietly. Let the card find you.</div>
+
+  <img id="opening" src="assets/major/00_Celestial_Gate.png" alt="Celestial Gate opening card">
+
+  <div class="actions">
+    <button class="primary" onclick="draw(1)">Open 1 Card</button>
+    <button class="primary" onclick="draw(3)">Open 3 Cards</button>
+    <button id="resetBtn" onclick="resetDeck()">Reset</button>
+  </div>
+  <div id="hint" class="hint">Choose a spread, then tap each card to reveal it.</div>
+
+  <div id="spread" aria-live="polite"></div>
+  <div id="session"></div>
+  <footer>Celestial Gate Tarot • 78-card prototype • interpretations coming later</footer>
+</main>
+
+<script>
+const cards=[{"name": "The Fool", "file": "assets/major/01_The_Fool.png"}, {"name": "The Magician", "file": "assets/major/02_The_Magician.png"}, {"name": "The High Priestess", "file": "assets/major/03_The_High_Priestess.png"}, {"name": "The Empress", "file": "assets/major/04_The_Empress.png"}, {"name": "The Emperor", "file": "assets/major/05_The_Emperor.png"}, {"name": "The Hierophant", "file": "assets/major/06_The_Hierophant.png"}, {"name": "The Lovers", "file": "assets/major/07_The_Lovers.png"}, {"name": "The Chariot", "file": "assets/major/08_The_Chariot.png"}, {"name": "Strength", "file": "assets/major/09_Strength.png"}, {"name": "The Hermit", "file": "assets/major/10_The_Hermit.png"}, {"name": "Wheel of Fortune", "file": "assets/major/11_Wheel_of_Fortune.png"}, {"name": "Justice", "file": "assets/major/12_Justice.png"}, {"name": "The Hanged Man", "file": "assets/major/13_The_Hanged_Man.png"}, {"name": "Death", "file": "assets/major/14_Death.png"}, {"name": "Temperance", "file": "assets/major/15_Temperance.png"}, {"name": "The Devil", "file": "assets/major/16_The_Devil.png"}, {"name": "The Tower", "file": "assets/major/17_The_Tower.png"}, {"name": "The Star", "file": "assets/major/18_The_Star.png"}, {"name": "The Moon", "file": "assets/major/19_The_Moon.png"}, {"name": "The Sun", "file": "assets/major/20_The_Sun.png"}, {"name": "Judgement", "file": "assets/major/21_Judgement.png"}, {"name": "The World", "file": "assets/major/22_The_World.png"}, {"name": "Ace of Wands", "file": "assets/minor/Wands_Ace.png"}, {"name": "Two of Wands", "file": "assets/minor/Wands_Two.png"}, {"name": "Three of Wands", "file": "assets/minor/Wands_Three.png"}, {"name": "Four of Wands", "file": "assets/minor/Wands_Four.png"}, {"name": "Five of Wands", "file": "assets/minor/Wands_Five.png"}, {"name": "Six of Wands", "file": "assets/minor/Wands_Six.png"}, {"name": "Seven of Wands", "file": "assets/minor/Wands_Seven.png"}, {"name": "Eight of Wands", "file": "assets/minor/Wands_Eight.png"}, {"name": "Nine of Wands", "file": "assets/minor/Wands_Nine.png"}, {"name": "Ten of Wands", "file": "assets/minor/Wands_Ten.png"}, {"name": "Page of Wands", "file": "assets/minor/Wands_Page.png"}, {"name": "Knight of Wands", "file": "assets/minor/Wands_Knight.png"}, {"name": "Queen of Wands", "file": "assets/minor/Wands_Queen.png"}, {"name": "King of Wands", "file": "assets/minor/Wands_King.png"}, {"name": "Ace of Cups", "file": "assets/minor/Cups_Ace.png"}, {"name": "Two of Cups", "file": "assets/minor/Cups_Two.png"}, {"name": "Three of Cups", "file": "assets/minor/Cups_Three.png"}, {"name": "Four of Cups", "file": "assets/minor/Cups_Four.png"}, {"name": "Five of Cups", "file": "assets/minor/Cups_Five.png"}, {"name": "Six of Cups", "file": "assets/minor/Cups_Six.png"}, {"name": "Seven of Cups", "file": "assets/minor/Cups_Seven.png"}, {"name": "Eight of Cups", "file": "assets/minor/Cups_Eight.png"}, {"name": "Nine of Cups", "file": "assets/minor/Cups_Nine.png"}, {"name": "Ten of Cups", "file": "assets/minor/Cups_Ten.png"}, {"name": "Page of Cups", "file": "assets/minor/Cups_Page.png"}, {"name": "Knight of Cups", "file": "assets/minor/Cups_Knight.png"}, {"name": "Queen of Cups", "file": "assets/minor/Cups_Queen.png"}, {"name": "King of Cups", "file": "assets/minor/Cups_King.png"}, {"name": "Ace of Swords", "file": "assets/minor/Swords_Ace.png"}, {"name": "Two of Swords", "file": "assets/minor/Swords_Two.png"}, {"name": "Three of Swords", "file": "assets/minor/Swords_Three.png"}, {"name": "Four of Swords", "file": "assets/minor/Swords_Four.png"}, {"name": "Five of Swords", "file": "assets/minor/Swords_Five.png"}, {"name": "Six of Swords", "file": "assets/minor/Swords_Six.png"}, {"name": "Seven of Swords", "file": "assets/minor/Swords_Seven.png"}, {"name": "Eight of Swords", "file": "assets/minor/Swords_Eight.png"}, {"name": "Nine of Swords", "file": "assets/minor/Swords_Nine.png"}, {"name": "Ten of Swords", "file": "assets/minor/Swords_Ten.png"}, {"name": "Page of Swords", "file": "assets/minor/Swords_Page.png"}, {"name": "Knight of Swords", "file": "assets/minor/Swords_Knight.png"}, {"name": "Queen of Swords", "file": "assets/minor/Swords_Queen.png"}, {"name": "King of Swords", "file": "assets/minor/Swords_King.png"}, {"name": "Ace of Pentacles", "file": "assets/minor/Pentacles_Ace.png"}, {"name": "Two of Pentacles", "file": "assets/minor/Pentacles_Two.png"}, {"name": "Three of Pentacles", "file": "assets/minor/Pentacles_Three.png"}, {"name": "Four of Pentacles", "file": "assets/minor/Pentacles_Four.png"}, {"name": "Five of Pentacles", "file": "assets/minor/Pentacles_Five.png"}, {"name": "Six of Pentacles", "file": "assets/minor/Pentacles_Six.png"}, {"name": "Seven of Pentacles", "file": "assets/minor/Pentacles_Seven.png"}, {"name": "Eight of Pentacles", "file": "assets/minor/Pentacles_Eight.png"}, {"name": "Nine of Pentacles", "file": "assets/minor/Pentacles_Nine.png"}, {"name": "Ten of Pentacles", "file": "assets/minor/Pentacles_Ten.png"}, {"name": "Page of Pentacles", "file": "assets/minor/Pentacles_Page.png"}, {"name": "Knight of Pentacles", "file": "assets/minor/Pentacles_Knight.png"}, {"name": "Queen of Pentacles", "file": "assets/minor/Pentacles_Queen.png"}, {"name": "King of Pentacles", "file": "assets/minor/Pentacles_King.png"}];
+const back="assets/back/Card_Back.png";
+let available=[...cards],drawn=[];
+
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+}
+
+function draw(n){
+  if(drawn.length)return;
+  shuffle(available);
+  drawn=available.splice(0,n);
+  const spread=document.getElementById('spread');
+  spread.innerHTML='';
+  document.getElementById('hint').textContent =
+    n===1 ? 'Your card is waiting. Tap it to open the Gate.' :
+            'Three cards are waiting. Tap each one to open the Gate.';
+  document.getElementById('session').style.display='block';
+  document.getElementById('session').textContent =
+    n===1 ? 'ONE CARD • A single message' : 'THREE CARDS • A three-part message';
+
+  drawn.forEach((c,i)=>{
+    const d=document.createElement('div');
+    d.className='slot';
+    d.innerHTML=
+      '<div class="position">Card '+(i+1)+'</div>'+
+      '<div class="card" id="c'+i+'" role="button" tabindex="0" aria-label="Tap to reveal card '+(i+1)+'">'+
+        '<div class="card-inner">'+
+          '<div class="face back"><img src="'+back+'" alt="Face-down tarot card"><span class="tap-badge">TAP TO REVEAL</span></div>'+
+          '<div class="face front"><img src="'+c.file+'" alt="'+c.name+'"></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="name" id="n'+i+'">Waiting to be revealed</div>';
+    spread.appendChild(d);
+    const cardEl = d.querySelector('.card');
+    cardEl.addEventListener('pointerup', function(e){
+      e.preventDefault();
+      reveal(i);
+    }, {passive:false});
+    cardEl.addEventListener('keydown', function(e){
+      if(e.key==='Enter' || e.key===' '){
+        e.preventDefault();
+        reveal(i);
+      }
+    });
+  });
+}
+
+function reveal(i){
+  const c=document.getElementById('c'+i);
+  if(c.classList.contains('revealed'))return;
+  c.classList.add('revealed');
+  document.getElementById('n'+i).textContent=drawn[i].name;
+  document.getElementById('hint').textContent='The card is opening…';
+
+  if(drawn.every((_,idx)=>document.getElementById('c'+idx).classList.contains('revealed'))){
+    document.getElementById('hint').textContent='The Gate is open. Take a moment with the cards.';
+  }
+}
+
+function resetDeck(){
+  available=[...cards];
+  drawn=[];
+  document.getElementById('spread').innerHTML='';
+  document.getElementById('session').style.display='none';
+  document.getElementById('hint').textContent='Choose a spread, then tap each card to reveal it.';
+}
+</script>
+</body>
+</html>
