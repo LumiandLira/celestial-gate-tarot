@@ -152,7 +152,7 @@
   <div class="container">
     <div class="gate-section">
       <div class="card-slot">
-        <img src="assets/back/Card_Back.jpg" alt="Celestial Gate Opening Card" id="gateImg">
+        <img src="assets/back/Card_Back.jpg" alt="Celestial Gate Opening Card" id="gateImg" onerror="handleImageError(this)">
       </div>
 
       <div class="controls">
@@ -167,7 +167,7 @@
   </div>
 
   <script>
-    // รายชื่อไพ่ทั้ง 78 ใบ (ชื่อไฟล์ตรงกับโฟลเดอร์ GitHub)
+    // รายชื่อไพ่ทั้ง 78 ใบ
     const tarotDeck = [
       // Major Arcana (22)
       { name: "Celestial Gate", path: "assets/major/00_Celestial_Gate.jpg" },
@@ -259,7 +259,7 @@
       { name: "King of Wands", path: "assets/minor/Wands_King.jpg" }
     ];
 
-    // ฟังก์ชันสับสำรับ (Shuffle) ป้องกันไพ่ซ้ำกัน 100%
+    // สลับไพ่ไม่ให้ซ้ำ
     function getShuffledDeck() {
       const shuffled = [...tarotDeck];
       for (let i = shuffled.length - 1; i > 0; i--) {
@@ -284,12 +284,30 @@
         cardDiv.innerHTML = `
           <span class="card-title">CARD ${i + 1}</span>
           <div class="card-slot">
-            <img src="${card.path}" alt="${card.name}">
+            <img src="${card.path}" alt="${card.name}" onerror="handleImageError(this)">
           </div>
           <p style="margin-top: 0.5rem; font-size: 1rem;">${card.name}</p>
         `;
         
         display.appendChild(cardDiv);
+      }
+    }
+
+    // ฟังก์ชันสลับค้นหานามสกุลอัตโนมัติ (.PNG / .png / .jpg / .jpeg)
+    function handleImageError(img) {
+      if (!img.dataset.tryCount) img.dataset.tryCount = "1";
+      const count = parseInt(img.dataset.tryCount);
+      const src = img.src;
+
+      if (count === 1) {
+        img.dataset.tryCount = "2";
+        img.src = src.replace(/\.jpg$/i, '.PNG');
+      } else if (count === 2) {
+        img.dataset.tryCount = "3";
+        img.src = src.replace(/\.PNG$/, '.png');
+      } else if (count === 3) {
+        img.dataset.tryCount = "4";
+        img.src = src.replace(/\.png$/, '.jpeg');
       }
     }
 
