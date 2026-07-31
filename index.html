@@ -27,7 +27,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       padding: 2rem 1rem;
       background-image: radial-gradient(circle at 50% 0%, #2e1065 0%, var(--bg-color) 70%);
       overflow-x: hidden;
@@ -56,8 +56,8 @@
     }
 
     .portal-card-wrapper {
-      width: 240px;
-      height: 410px;
+      width: 220px;
+      height: 380px;
       border-radius: 16px;
       border: 1px solid rgba(216, 180, 254, 0.4);
       overflow: hidden;
@@ -111,7 +111,7 @@
     /* --- MAIN APP SECTION --- */
     header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     h1 {
@@ -129,12 +129,12 @@
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1100px;
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2rem;
+      gap: 1.5rem;
       opacity: 0;
       transition: opacity 1.5s ease 0.5s;
     }
@@ -147,7 +147,7 @@
       display: flex;
       gap: 1rem;
       justify-content: center;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
       flex-wrap: wrap;
     }
 
@@ -155,9 +155,9 @@
       background: linear-gradient(135deg, #a855f7, #6b21a8);
       color: white;
       border: none;
-      padding: 0.75rem 1.5rem;
+      padding: 0.75rem 1.4rem;
       border-radius: 25px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
@@ -172,9 +172,9 @@
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: var(--text-main);
-      padding: 0.75rem 1.5rem;
+      padding: 0.75rem 1.4rem;
       border-radius: 25px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       cursor: pointer;
       transition: all 0.3s ease;
     }
@@ -183,38 +183,83 @@
       background: rgba(255, 255, 255, 0.2);
     }
 
+    /* --- STANDARD GRID LAYOUT (1 & 3 CARDS) --- */
     .cards-grid {
       display: flex;
       justify-content: center;
       gap: 1.5rem;
       flex-wrap: wrap;
       width: 100%;
-      margin-top: 1.5rem;
-      min-height: 420px;
+      margin-top: 1rem;
+      min-height: 380px;
     }
 
     .card-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
-      perspective: 1000px; /* สำหรับ 3D Flip */
+      gap: 0.4rem;
+      perspective: 1000px;
     }
 
     .card-title {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* --- CELTIC CROSS LAYOUT (10 CARDS) --- */
+    .celtic-cross-layout {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 3rem;
+      width: 100%;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* ฝั่งวงกากบาท (Cross) */
+    .celtic-cross-circle {
+      position: relative;
+      width: 480px;
+      height: 600px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ตำแหน่งเจาะจงของไพ่แต่ละใบใน Celtic Cross */
+    .celtic-cross-circle .card-item[data-pos="1"] { position: absolute; z-index: 1; }
+    .celtic-cross-circle .card-item[data-pos="2"] { position: absolute; z-index: 2; transform: rotate(90deg) scale(0.95); }
+    .celtic-cross-circle .card-item[data-pos="3"] { position: absolute; bottom: 0; }
+    .celtic-cross-circle .card-item[data-pos="4"] { position: absolute; left: 0; }
+    .celtic-cross-circle .card-item[data-pos="5"] { position: absolute; top: 0; }
+    .celtic-cross-circle .card-item[data-pos="6"] { position: absolute; right: 0; }
+
+    /* ฝั่งเสาขวามือ (Staff) */
+    .celtic-cross-staff {
+      display: flex;
+      flex-direction: column-reverse; /* เรียงจากใบที่ 7 ด้านล่างขึ้นใบที่ 10 ด้านบน */
+      gap: 1rem;
     }
 
     /* --- 3D CARD FLIP CONTAINER --- */
     .card-flip-container {
-      width: 220px;
-      height: 380px;
+      width: 130px; /* ขนาดกะทัดรัดขึ้นเพื่อให้อ่าน Celtic Cross ง่ายบนทุกหน้าจอ */
+      height: 225px;
       position: relative;
       transform-style: preserve-3d;
       transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ปรับขนาดใหญ่ขึ้นเวลาเปิด 1 หรือ 3 ใบ */
+    .cards-grid .card-flip-container {
+      width: 200px;
+      height: 345px;
     }
 
     .card-flip-container.flipped {
@@ -226,8 +271,8 @@
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
-      border-radius: 12px;
-      border: 1px solid rgba(216, 180, 254, 0.2);
+      border-radius: 8px;
+      border: 1px solid rgba(216, 180, 254, 0.25);
       overflow: hidden;
       background-color: var(--card-bg);
     }
@@ -238,21 +283,20 @@
       object-fit: cover;
     }
 
-    .card-back {
-      /* หลังไพ่ */
-      transform: rotateY(0deg);
-    }
+    .card-back { transform: rotateY(0deg); }
+    .card-front { transform: rotateY(180deg); }
 
-    .card-front {
-      /* หน้าไพ่ */
-      transform: rotateY(180deg);
+    .card-name-text {
+      font-size: 0.85rem;
+      max-width: 140px;
+      text-align: center;
+      line-height: 1.2;
     }
-
   </style>
 </head>
 <body>
 
-  <!-- 1. INTRO SPLASH SCREEN (หน้าประตูมิติต้อนรับ) -->
+  <!-- 1. INTRO SPLASH SCREEN -->
   <div id="intro-screen">
     <p style="font-size: 0.85rem; color: var(--accent); letter-spacing: 4px; margin-bottom: 0.8rem;">CELESTIAL GATE TAROT</p>
     
@@ -264,7 +308,7 @@
     <p style="font-size: 0.85rem; color: var(--text-sub); margin-top: 1rem; font-style: italic;">Tap the card to step through</p>
   </div>
 
-  <!-- 2. MAIN READING SECTION (หน้าสุ่มเปิดไพ่) -->
+  <!-- 2. MAIN READING SECTION -->
   <header>
     <p style="font-size: 0.8rem; color: var(--accent); letter-spacing: 3px;">CELESTIAL GATE TAROT</p>
     <h1>Celestial Oracle</h1>
@@ -275,23 +319,20 @@
     <div class="controls">
       <button class="action-btn" onclick="drawCards(1)">Open 1 Card</button>
       <button class="action-btn" onclick="drawCards(3)">Open 3 Cards</button>
+      <button class="action-btn" onclick="drawCelticCross()">Open 10 Cards (Celtic Cross)</button>
       <button class="reset-btn" onclick="resetDeck()">Reset Deck</button>
     </div>
 
-    <div class="cards-grid" id="cardsDisplay"></div>
+    <div id="cardsDisplay"></div>
   </div>
 
   <script>
-    // ฟังก์ชันกดเปิดประตูเข้าสู่เว็บ
     function enterGate() {
-      const intro = document.getElementById('intro-screen');
-      const container = document.getElementById('mainContainer');
-      
-      intro.classList.add('hidden');
-      container.classList.add('visible');
+      document.getElementById('intro-screen').classList.add('hidden');
+      document.getElementById('mainContainer').classList.add('visible');
     }
 
-    // กองไพ่ 78 ใบมาตรฐานสำหรับสุ่มทำนาย
+    // กองไพ่ 78 ใบมาตรฐาน
     const tarotDeck = [
       // Major Arcana (22)
       { name: "The Fool", path: "assets/major/01_The_Fool.jpg" },
@@ -382,7 +423,6 @@
       { name: "King of Wands", path: "assets/minor/Wands_King.jpg" }
     ];
 
-    // สลับไพ่ไม่ให้ซ้ำ (Fisher-Yates Shuffle)
     function getShuffledDeck() {
       const shuffled = [...tarotDeck];
       for (let i = shuffled.length - 1; i > 0; i--) {
@@ -392,9 +432,10 @@
       return shuffled;
     }
 
-    // ฟังก์ชันเปิดไพ่พร้อม animation พลิกไพ่ 3D
+    // ฟังก์ชันเปิดไพ่ 1 และ 3 ใบ
     function drawCards(count) {
       const display = document.getElementById('cardsDisplay');
+      display.className = 'cards-grid';
       display.innerHTML = '';
 
       const deck = getShuffledDeck();
@@ -408,21 +449,18 @@
         cardDiv.innerHTML = `
           <span class="card-title">CARD ${i + 1}</span>
           <div class="card-flip-container" id="cardContainer-${i}">
-            <!-- หลังไพ่ -->
             <div class="card-face card-back">
               <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
             </div>
-            <!-- หน้าไพ่ที่สุ่มได้ -->
             <div class="card-face card-front">
               <img src="${card.path}" alt="${card.name}" onerror="handleImageError(this)">
             </div>
           </div>
-          <p style="margin-top: 0.5rem; font-size: 1rem;">${card.name}</p>
+          <p class="card-name-text">${card.name}</p>
         `;
         
         display.appendChild(cardDiv);
 
-        // ทยอยพลิกไพ่ทีละใบช้าๆ เพื่อความสวยงาม (Staggered Flip)
         setTimeout(() => {
           const containerElem = document.getElementById(`cardContainer-${i}`);
           if (containerElem) containerElem.classList.add('flipped');
@@ -430,7 +468,60 @@
       }
     }
 
-    // ระบบตรวจเช็กนามสกุลไฟล์อัตโนมัติ (.PNG / .png / .jpg / .jpeg)
+    // ชื่อตำแหน่งของ Celtic Cross
+    const celticPositions = [
+      "1. Present", "2. Challenge", "3. Foundation",
+      "4. Past", "5. Crown/Goal", "6. Future",
+      "7. Self", "8. Environment", "9. Hopes/Fears", "10. Outcome"
+    ];
+
+    // ฟังก์ชันเปิดไพ่ 10 ใบ (Celtic Cross)
+    function drawCelticCross() {
+      const display = document.getElementById('cardsDisplay');
+      display.className = 'celtic-cross-layout';
+      display.innerHTML = `
+        <div class="celtic-cross-circle" id="celticCircle"></div>
+        <div class="celtic-cross-staff" id="celticStaff"></div>
+      `;
+
+      const circleElem = document.getElementById('celticCircle');
+      const staffElem = document.getElementById('celticStaff');
+      const deck = getShuffledDeck();
+
+      for (let i = 0; i < 10; i++) {
+        const card = deck[i];
+        const posNum = i + 1;
+        
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'card-item';
+        cardDiv.setAttribute('data-pos', posNum);
+        
+        cardDiv.innerHTML = `
+          <span class="card-title">${celticPositions[i]}</span>
+          <div class="card-flip-container" id="cardContainer-${i}">
+            <div class="card-face card-back">
+              <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
+            </div>
+            <div class="card-face card-front">
+              <img src="${card.path}" alt="${card.name}" onerror="handleImageError(this)">
+            </div>
+          </div>
+          <p class="card-name-text">${card.name}</p>
+        `;
+
+        if (posNum <= 6) {
+          circleElem.appendChild(cardDiv);
+        } else {
+          staffElem.appendChild(cardDiv);
+        }
+
+        setTimeout(() => {
+          const containerElem = document.getElementById(`cardContainer-${i}`);
+          if (containerElem) containerElem.classList.add('flipped');
+        }, 200 + (i * 200));
+      }
+    }
+
     function handleImageError(img) {
       if (!img.dataset.tryCount) img.dataset.tryCount = "1";
       const count = parseInt(img.dataset.tryCount);
