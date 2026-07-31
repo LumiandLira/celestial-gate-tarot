@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+ <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Celestial Gate Tarot</title>
-  <!-- โหลดไลบรารี html2canvas สำหรับแปลง div เป็นรูปภาพ -->
+  <!-- โหลดไลบรารี html2canvas สำหรับเซฟรูปภาพ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
@@ -131,7 +131,9 @@
 
     button.save-btn {
       background: linear-gradient(135deg, #10b981, #047857);
-      margin-top: 1rem;
+      margin-top: 1.5rem;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
     }
 
     button.clarifier-btn {
@@ -163,7 +165,7 @@
       margin: 0.5rem 0;
     }
 
-    /* --- FAN DECK --- */
+    /* --- FAN DECK (กางไพ่เรียงแถว) --- */
     .fan-deck-container {
       width: 100%;
       height: 220px;
@@ -206,14 +208,13 @@
       transform: translateY(-50px) scale(0.5) !important;
     }
 
-    /* --- RESULT AREA WRAPPER (สำหรับเซฟภาพ) --- */
+    /* --- RESULT AREA (สำหรับครอบพื้นที่เซฟรูป) --- */
     #resultArea {
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 1rem;
-      border-radius: 12px;
     }
 
     /* --- STANDARD GRID & CELTIC CROSS LAYOUT --- */
@@ -272,7 +273,7 @@
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;
     }
     .celtic-cross-circle .card-item[data-pos="2"] {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(90deg); z-index: 2;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2;
     }
     .celtic-cross-circle .card-item[data-pos="3"] { position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
     .celtic-cross-circle .card-item[data-pos="4"] { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
@@ -295,6 +296,7 @@
     .cards-grid .card-flip-container { width: 160px; height: 275px; }
     .card-flip-container.flipped { transform: rotateY(180deg); }
     .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container.flipped { transform: rotateY(180deg) rotate(90deg); }
+    .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container { transform: rotate(90deg); }
 
     .card-face {
       position: absolute; width: 100%; height: 100%;
@@ -306,7 +308,7 @@
     .card-face img { width: 100%; height: 100%; object-fit: cover; }
     .card-back { transform: rotateY(0deg); }
     .card-front { transform: rotateY(180deg); }
-    .card-name-text { font-size: 0.8rem; max-width: 130px; text-align: center; color: var(--text-main); margin-top: 2px; }
+    .card-name-text { font-size: 0.8rem; max-width: 130px; text-align: center; }
 
     /* --- RESPONSIVE FOR MOBILE (IPHONE) --- */
     @media (max-width: 768px) {
@@ -330,6 +332,9 @@
         transform: none !important;
         margin-bottom: 0.5rem;
       }
+      .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container {
+        transform: none !important;
+      }
       .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container.flipped {
         transform: rotateY(180deg) !important;
       }
@@ -340,17 +345,13 @@
       .card-title {
         font-size: 0.7rem;
       }
-      .card-desc {
-        font-size: 0.6rem;
-        max-width: 180px;
-      }
       .card-name-text {
         font-size: 0.75rem;
         max-width: 180px;
       }
     }
 
-    /* --- CLARIFIER SECTION --- */
+    /* --- SECTION ไพ่ขยาย (CLARIFIER) --- */
     .clarifier-wrapper {
       width: 100%;
       display: flex;
@@ -396,7 +397,7 @@
     <!-- กองไพ่ที่กางให้หยิบ -->
     <div class="fan-deck-container" id="fanDeckContainer"></div>
 
-    <!-- พื้นที่สำหรับแสดงผลไพ่และปุ่มเซฟรูป -->
+    <!-- พื้นแสดงผลไพ่และปุ่มเซฟรูป -->
     <div id="resultArea" style="display: none;">
       <div id="cardsDisplay" style="width: 100%;"></div>
       <button class="save-btn" id="saveBtn" onclick="saveTarotImage()">💾 เซฟภาพหน้าไพ่</button>
@@ -544,7 +545,6 @@
     }
 
     function prepareMode(mode) {
-      document.getElementById('resultArea').style.display = 'none';
       document.getElementById('cardsDisplay').innerHTML = '';
       document.getElementById('clarifierDisplay').innerHTML = '';
       document.getElementById('clarifierWrapper').style.display = 'none';
@@ -570,7 +570,7 @@
 
     function selectCard(index, cardElem) {
       if (targetCount === 0) {
-        alert("กรุณากดเลือกจำนวนไพ่ที่ต้องการดูก่อนครับ (1 ใบ, 3 ใบ, 5 ใบ หรือ Celtic Cross)");
+        alert("กรุณากดเลือกรูปแบบการดูไพ่ หรือกดสับไพ่ก่อนครับ");
         return;
       }
 
@@ -647,16 +647,9 @@
     }
 
     const celticPositions = [
-      { title: "1. Significator", desc: "ตัวตน / สถานการณ์" },
-      { title: "2. Crossing Card", desc: "อุปสรรคที่ขวางอยู่" },
-      { title: "3. Crowning Card", desc: "เป้าหมาย / สิ่งที่คาดหวัง" },
-      { title: "4. Base of the Matter", desc: "รากเหง้า / พื้นฐานปัญหา" },
-      { title: "5. Past Influences", desc: "อิทธิพลในอดีต" },
-      { title: "6. Forthcoming", desc: "อนาคตอันใกล้" },
-      { title: "7. Where One Finds", desc: "มุมมองหรือตัวตนเรา" },
-      { title: "8. Views of Others", desc: "มุมมองคนรอบข้าง" },
-      { title: "9. Hopes and Fears", desc: "ความหวังและความกลัว" },
-      { title: "10. Final Outcome", desc: "บทสรุปสุดท้าย" }
+      "1. Present", "2. Challenge", "3. Crown / Goal", 
+      "4. Future", "5. Foundation", "6. Past",
+      "7. Self", "8. Environment", "9. Hopes / Fears", "10. Outcome"
     ];
 
     function displayCelticCross() {
@@ -672,14 +665,12 @@
 
       selectedCards.forEach((card, i) => {
         const posNum = i + 1;
-        const posData = celticPositions[i];
         const cardDiv = document.createElement('div');
         cardDiv.className = 'card-item';
         cardDiv.setAttribute('data-pos', posNum);
         
         cardDiv.innerHTML = `
-          <span class="card-title">${posData.title}</span>
-          <span class="card-desc">${posData.desc}</span>
+          <span class="card-title">${celticPositions[i]}</span>
           <div class="card-flip-container" id="cardContainer-${i}">
             <div class="card-face card-back">
               <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
@@ -758,7 +749,6 @@
       }).then(canvas => {
         saveBtn.style.display = 'block';
         
-        // ใช้วิธีแปลงเป้น Blob และสร้างลิงก์ดาวน์โหลดที่รองรับ iOS Safari ได้อย่างสมบูรณ์
         canvas.toBlob(function(blob) {
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
