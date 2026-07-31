@@ -758,33 +758,18 @@
       }).then(canvas => {
         saveBtn.style.display = 'block';
         
-        const dataURL = canvas.toDataURL('image/png');
-        const newWindow = window.open();
-        if (newWindow) {
-          newWindow.document.write(`
-            <!DOCTYPE html>
-            <html lang="th">
-            <head>
-              <meta charset="UTF-8">
-              <title>Tarot Reading Result</title>
-              <style>
-                body { background: #0b0712; color: #f3e8ff; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; font-family: sans-serif; text-align: center; padding: 1rem; }
-                img { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 20px rgba(168,85,247,0.4); margin-bottom: 1rem; }
-                p { font-size: 0.95rem; color: #d8b4fe; }
-              </style>
-            </head>
-            <body>
-              <p>กดค้างที่รูปภาพด้านล่างนี้ แล้วเลือก <strong>"Add to Photos" (เพิ่มไปยังรูปภาพ)</strong> หรือ <strong>"Download Linked File"</strong> เพื่อบันทึกครับ</p>
-              <img src="${dataURL}" alt="Tarot Reading">
-            </body>
-            </html>
-          `);
-        } else {
+        // ใช้วิธีแปลงเป้น Blob และสร้างลิงก์ดาวน์โหลดที่รองรับ iOS Safari ได้อย่างสมบูรณ์
+        canvas.toBlob(function(blob) {
+          const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
+          link.href = url;
           link.download = 'tarot-reading.png';
-          link.href = dataURL;
+          document.body.appendChild(link);
           link.click();
-        }
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 'image/png');
+
       }).catch(err => {
         saveBtn.style.display = 'block';
         alert("ไม่สามารถสร้างรูปภาพได้ กรุณาลองใหม่อีกครั้งครับ");
