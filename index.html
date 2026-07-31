@@ -27,10 +27,88 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       padding: 2rem 1rem;
       background-image: radial-gradient(circle at 50% 0%, #2e1065 0%, var(--bg-color) 70%);
+      overflow-x: hidden;
     }
 
+    /* --- INTRO SCREEN (SPLASH PORTAL) --- */
+    #intro-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at 50% 40%, #2e1065 0%, #0b0712 80%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: opacity 1.2s ease, transform 1.2s ease, visibility 1.2s;
+    }
+
+    #intro-screen.hidden {
+      opacity: 0;
+      transform: scale(1.15);
+      visibility: hidden;
+    }
+
+    .portal-card-wrapper {
+      width: 240px;
+      height: 410px;
+      border-radius: 16px;
+      border: 1px solid rgba(216, 180, 254, 0.4);
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.4), 0 0 60px rgba(216, 180, 254, 0.2);
+      cursor: pointer;
+      animation: floatGlow 4s ease-in-out infinite;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .portal-card-wrapper:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 40px rgba(168, 85, 247, 0.6), 0 0 80px rgba(216, 180, 254, 0.4);
+    }
+
+    .portal-card-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @keyframes floatGlow {
+      0%, 100% {
+        transform: translateY(0);
+        box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
+      }
+      50% {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 45px rgba(216, 180, 254, 0.5);
+      }
+    }
+
+    .enter-btn {
+      margin-top: 2rem;
+      background: linear-gradient(135deg, #a855f7, #6b21a8);
+      color: white;
+      border: none;
+      padding: 0.85rem 2.2rem;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .enter-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(168, 85, 247, 0.7);
+    }
+
+    /* --- MAIN APP SECTION --- */
     header {
       text-align: center;
       margin-bottom: 2rem;
@@ -57,43 +135,23 @@
       flex-direction: column;
       align-items: center;
       gap: 2rem;
+      opacity: 0;
+      transition: opacity 1.5s ease 0.5s;
     }
 
-    .gate-section {
-      text-align: center;
-      width: 100%;
-    }
-
-    .card-slot {
-      width: 220px;
-      height: 380px;
-      margin: 1rem auto;
-      border-radius: 12px;
-      border: 1px solid rgba(216, 180, 254, 0.2);
-      overflow: hidden;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-      background-color: var(--card-bg);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .card-slot img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+    .container.visible {
+      opacity: 1;
     }
 
     .controls {
       display: flex;
       gap: 1rem;
       justify-content: center;
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       flex-wrap: wrap;
     }
 
-    button {
+    button.action-btn {
       background: linear-gradient(135deg, #a855f7, #6b21a8);
       color: white;
       border: none;
@@ -105,7 +163,7 @@
       box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
     }
 
-    button:hover {
+    button.action-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
     }
@@ -113,6 +171,12 @@
     button.reset-btn {
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--text-main);
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
     button.reset-btn:hover {
@@ -125,7 +189,8 @@
       gap: 1.5rem;
       flex-wrap: wrap;
       width: 100%;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
+      min-height: 420px;
     }
 
     .card-item {
@@ -133,44 +198,102 @@
       flex-direction: column;
       align-items: center;
       gap: 0.5rem;
+      perspective: 1000px; /* สำหรับ 3D Flip */
     }
 
     .card-title {
       font-size: 0.9rem;
       color: var(--accent);
     }
+
+    /* --- 3D CARD FLIP CONTAINER --- */
+    .card-flip-container {
+      width: 220px;
+      height: 380px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-flip-container.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      border: 1px solid rgba(216, 180, 254, 0.2);
+      overflow: hidden;
+      background-color: var(--card-bg);
+    }
+
+    .card-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-back {
+      /* หลังไพ่ */
+      transform: rotateY(0deg);
+    }
+
+    .card-front {
+      /* หน้าไพ่ */
+      transform: rotateY(180deg);
+    }
+
   </style>
 </head>
 <body>
 
+  <!-- 1. INTRO SPLASH SCREEN (หน้าประตูมิติต้อนรับ) -->
+  <div id="intro-screen">
+    <p style="font-size: 0.85rem; color: var(--accent); letter-spacing: 4px; margin-bottom: 0.8rem;">CELESTIAL GATE TAROT</p>
+    
+    <div class="portal-card-wrapper" onclick="enterGate()">
+      <img src="assets/major/00_Celestial_Gate.jpg" alt="Celestial Gate Entrance" onerror="handleImageError(this)">
+    </div>
+
+    <button class="enter-btn" onclick="enterGate()">ENTER THE GATE</button>
+    <p style="font-size: 0.85rem; color: var(--text-sub); margin-top: 1rem; font-style: italic;">Tap the card to step through</p>
+  </div>
+
+  <!-- 2. MAIN READING SECTION (หน้าสุ่มเปิดไพ่) -->
   <header>
     <p style="font-size: 0.8rem; color: var(--accent); letter-spacing: 3px;">CELESTIAL GATE TAROT</p>
-    <h1>Open the Gate</h1>
-    <p class="subtitle">Enter quietly. Let the card find you.</p>
+    <h1>Celestial Oracle</h1>
+    <p class="subtitle">Enter quietly. Let the cards reveal your path.</p>
   </header>
 
-  <div class="container">
-    <div class="gate-section">
-      <div class="card-slot">
-        <img src="assets/back/Card_Back.jpg" alt="Celestial Gate Opening Card" id="gateImg" onerror="handleImageError(this)">
-      </div>
-
-      <div class="controls">
-        <button onclick="drawCards(1)">Open 1 Card</button>
-        <button onclick="drawCards(3)">Open 3 Cards</button>
-        <button class="reset-btn" onclick="resetDeck()">Reset</button>
-      </div>
-      <p style="font-size: 0.85rem; color: var(--text-sub); margin-top: 1rem;">The Gate is open. Take a moment with the cards.</p>
+  <div class="container" id="mainContainer">
+    <div class="controls">
+      <button class="action-btn" onclick="drawCards(1)">Open 1 Card</button>
+      <button class="action-btn" onclick="drawCards(3)">Open 3 Cards</button>
+      <button class="reset-btn" onclick="resetDeck()">Reset Deck</button>
     </div>
 
     <div class="cards-grid" id="cardsDisplay"></div>
   </div>
 
   <script>
-    // รายชื่อไพ่ทั้ง 78 ใบ
+    // ฟังก์ชันกดเปิดประตูเข้าสู่เว็บ
+    function enterGate() {
+      const intro = document.getElementById('intro-screen');
+      const container = document.getElementById('mainContainer');
+      
+      intro.classList.add('hidden');
+      container.classList.add('visible');
+    }
+
+    // กองไพ่ 78 ใบมาตรฐานสำหรับสุ่มทำนาย
     const tarotDeck = [
       // Major Arcana (22)
-      { name: "Celestial Gate", path: "assets/major/00_Celestial_Gate.jpg" },
       { name: "The Fool", path: "assets/major/01_The_Fool.jpg" },
       { name: "The Magician", path: "assets/major/02_The_Magician.jpg" },
       { name: "The High Priestess", path: "assets/major/03_The_High_Priestess.jpg" },
@@ -259,7 +382,7 @@
       { name: "King of Wands", path: "assets/minor/Wands_King.jpg" }
     ];
 
-    // สลับไพ่ไม่ให้ซ้ำ
+    // สลับไพ่ไม่ให้ซ้ำ (Fisher-Yates Shuffle)
     function getShuffledDeck() {
       const shuffled = [...tarotDeck];
       for (let i = shuffled.length - 1; i > 0; i--) {
@@ -269,6 +392,7 @@
       return shuffled;
     }
 
+    // ฟังก์ชันเปิดไพ่พร้อม animation พลิกไพ่ 3D
     function drawCards(count) {
       const display = document.getElementById('cardsDisplay');
       display.innerHTML = '';
@@ -283,17 +407,30 @@
         
         cardDiv.innerHTML = `
           <span class="card-title">CARD ${i + 1}</span>
-          <div class="card-slot">
-            <img src="${card.path}" alt="${card.name}" onerror="handleImageError(this)">
+          <div class="card-flip-container" id="cardContainer-${i}">
+            <!-- หลังไพ่ -->
+            <div class="card-face card-back">
+              <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
+            </div>
+            <!-- หน้าไพ่ที่สุ่มได้ -->
+            <div class="card-face card-front">
+              <img src="${card.path}" alt="${card.name}" onerror="handleImageError(this)">
+            </div>
           </div>
           <p style="margin-top: 0.5rem; font-size: 1rem;">${card.name}</p>
         `;
         
         display.appendChild(cardDiv);
+
+        // ทยอยพลิกไพ่ทีละใบช้าๆ เพื่อความสวยงาม (Staggered Flip)
+        setTimeout(() => {
+          const containerElem = document.getElementById(`cardContainer-${i}`);
+          if (containerElem) containerElem.classList.add('flipped');
+        }, 150 + (i * 250));
       }
     }
 
-    // ฟังก์ชันสลับค้นหานามสกุลอัตโนมัติ (.PNG / .png / .jpg / .jpeg)
+    // ระบบตรวจเช็กนามสกุลไฟล์อัตโนมัติ (.PNG / .png / .jpg / .jpeg)
     function handleImageError(img) {
       if (!img.dataset.tryCount) img.dataset.tryCount = "1";
       const count = parseInt(img.dataset.tryCount);
@@ -313,7 +450,6 @@
 
     function resetDeck() {
       document.getElementById('cardsDisplay').innerHTML = '';
-      document.getElementById('gateImg').src = 'assets/back/Card_Back.jpg';
     }
   </script>
 </body>
