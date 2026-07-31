@@ -35,7 +35,6 @@
       overflow-x: hidden;
     }
 
-    /* --- INTRO SCREEN --- */
     #intro-screen {
       position: fixed;
       top: 0;
@@ -86,7 +85,6 @@
       cursor: pointer;
     }
 
-    /* --- MAIN APP SECTION --- */
     header { text-align: center; margin-bottom: 1rem; }
     h1 { font-size: 2.2rem; color: var(--accent); }
     p.subtitle { color: var(--text-sub); font-size: 0.95rem; font-style: italic; }
@@ -164,7 +162,6 @@
       margin: 0.5rem 0;
     }
 
-    /* --- FAN DECK --- */
     .fan-deck-container {
       width: 100%;
       height: 220px;
@@ -212,7 +209,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 1rem;
+      padding: 0.2rem;
+      height: auto;
     }
 
     .cards-grid {
@@ -221,8 +219,7 @@
       gap: 1.5rem;
       flex-wrap: wrap;
       width: 100%;
-      margin-top: 1rem;
-      min-height: 380px;
+      margin-top: 0.5rem;
     }
 
     .card-item {
@@ -248,7 +245,7 @@
       align-items: center;
       gap: 4rem;
       width: 100%;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
       flex-wrap: wrap;
     }
 
@@ -284,14 +281,11 @@
     .cards-grid .card-flip-container { width: 160px; height: 275px; }
     .card-flip-container.flipped { transform: rotateY(180deg); }
     
-    /* แก้ไขทิศทางการวางทับของไพ่ใบที่ 2 ให้นอนขวางทับใบแรกอย่างถูกต้อง และไม่ให้เกิดช่องว่าง */
     .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container {
       transform: rotate(90deg);
-      margin: 0;
     }
     .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container.flipped {
       transform: rotateY(180deg) rotate(90deg);
-      margin: 0;
     }
 
     .card-face {
@@ -351,8 +345,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 2rem;
-      padding-top: 1.5rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
       border-top: 1px dashed rgba(216, 180, 254, 0.3);
     }
   </style>
@@ -389,12 +383,13 @@
 
     <div id="resultArea" style="display: none;">
       <div id="cardsDisplay" style="width: 100%;"></div>
-      <button class="save-btn" id="saveBtn" onclick="saveTarotImage()">💾 เซฟภาพหน้าไพ่</button>
-    </div>
 
-    <div class="clarifier-wrapper" id="clarifierWrapper" style="display: none;">
-      <button class="clarifier-btn" id="clarifierBtn" onclick="drawClarifierCard()">+ เปิดไพ่ขยาย ( Clarifier Card )</button>
-      <div class="cards-grid" id="clarifierDisplay" style="margin-top: 1.5rem; min-height: auto;"></div>
+      <div class="clarifier-wrapper" id="clarifierWrapper" style="display: none;">
+        <button class="clarifier-btn" id="clarifierBtn" onclick="drawClarifierCard()">+ เปิดไพ่ขยาย ( Clarifier Card )</button>
+        <div class="cards-grid" id="clarifierDisplay" style="margin-top: 1rem; min-height: auto;"></div>
+      </div>
+
+      <button class="save-btn" id="saveBtn" onclick="saveTarotImage()">💾 เซฟภาพหน้าไพ่</button>
     </div>
   </div>
 
@@ -533,6 +528,7 @@
     }
 
     function prepareMode(mode) {
+      document.getElementById('resultArea').style.display = 'none';
       document.getElementById('cardsDisplay').innerHTML = '';
       document.getElementById('clarifierDisplay').innerHTML = '';
       document.getElementById('clarifierWrapper').style.display = 'none';
