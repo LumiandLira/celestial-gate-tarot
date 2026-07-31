@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Celestial Gate Tarot</title>
-  <!-- โหลดไลบรารี html2canvas สำหรับเซฟรูปภาพ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
@@ -165,7 +164,7 @@
       margin: 0.5rem 0;
     }
 
-    /* --- FAN DECK (กางไพ่เรียงแถว) --- */
+    /* --- FAN DECK --- */
     .fan-deck-container {
       width: 100%;
       height: 220px;
@@ -208,7 +207,6 @@
       transform: translateY(-50px) scale(0.5) !important;
     }
 
-    /* --- RESULT AREA (สำหรับครอบพื้นที่เซฟรูป) --- */
     #resultArea {
       width: 100%;
       display: flex;
@@ -217,7 +215,6 @@
       padding: 1rem;
     }
 
-    /* --- STANDARD GRID & CELTIC CROSS LAYOUT --- */
     .cards-grid {
       display: flex;
       justify-content: center;
@@ -245,14 +242,6 @@
       font-weight: bold;
     }
 
-    .card-desc {
-      font-size: 0.68rem;
-      color: var(--text-sub);
-      font-style: italic;
-      max-width: 130px;
-      line-height: 1.2;
-    }
-
     .celtic-cross-layout {
       display: flex;
       justify-content: center;
@@ -273,16 +262,15 @@
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;
     }
     .celtic-cross-circle .card-item[data-pos="2"] {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2;
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;
     }
-    .celtic-cross-circle .card-item[data-pos="3"] { position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
-    .celtic-cross-circle .card-item[data-pos="4"] { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
-    .celtic-cross-circle .card-item[data-pos="5"] { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
-    .celtic-cross-circle .card-item[data-pos="6"] { position: absolute; left: 0; top: 50%; transform: translateY(-50%); }
+    .celtic-cross-circle .card-item[data-pos="3"] { position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 1; }
+    .celtic-cross-circle .card-item[data-pos="4"] { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 1; }
+    .celtic-cross-circle .card-item[data-pos="5"] { position: absolute; right: 0; top: 50%; transform: translateY(-50%); z-index: 1; }
+    .celtic-cross-circle .card-item[data-pos="6"] { position: absolute; left: 0; top: 50%; transform: translateY(-50%); z-index: 1; }
 
     .celtic-cross-staff { display: flex; flex-direction: column-reverse; gap: 1rem; }
 
-    /* --- 3D FLIP --- */
     .card-flip-container {
       width: 125px;
       height: 215px;
@@ -295,8 +283,16 @@
 
     .cards-grid .card-flip-container { width: 160px; height: 275px; }
     .card-flip-container.flipped { transform: rotateY(180deg); }
-    .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container.flipped { transform: rotateY(180deg) rotate(90deg); }
-    .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container { transform: rotate(90deg); }
+    
+    /* แก้ไขทิศทางการวางทับของไพ่ใบที่ 2 ให้นอนขวางทับใบแรกอย่างถูกต้อง และไม่ให้เกิดช่องว่าง */
+    .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container {
+      transform: rotate(90deg);
+      margin: 0;
+    }
+    .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container.flipped {
+      transform: rotateY(180deg) rotate(90deg);
+      margin: 0;
+    }
 
     .card-face {
       position: absolute; width: 100%; height: 100%;
@@ -310,7 +306,6 @@
     .card-front { transform: rotateY(180deg); }
     .card-name-text { font-size: 0.8rem; max-width: 130px; text-align: center; }
 
-    /* --- RESPONSIVE FOR MOBILE (IPHONE) --- */
     @media (max-width: 768px) {
       .celtic-cross-layout {
         flex-direction: column;
@@ -351,7 +346,6 @@
       }
     }
 
-    /* --- SECTION ไพ่ขยาย (CLARIFIER) --- */
     .clarifier-wrapper {
       width: 100%;
       display: flex;
@@ -365,16 +359,14 @@
 </head>
 <body>
 
-  <!-- INTRO SCREEN -->
   <div id="intro-screen">
     <p style="font-size: 0.85rem; color: var(--accent); letter-spacing: 4px; margin-bottom: 0.8rem;">CELESTIAL GATE TAROT</p>
     <div class="portal-card-wrapper" onclick="enterGate()">
-      <img src="assets/major/00_Celestial_Gate.jpg" alt="Celestial Gate Entrance" onerror="handleImageError(this)">
+      <img src="assets/major/00_Celestial_Gate.jpg" alt="" onerror="handleImageError(this)">
     </div>
     <button class="enter-btn" onclick="enterGate()">ENTER THE GATE</button>
   </div>
 
-  <!-- MAIN APP -->
   <header>
     <p style="font-size: 0.8rem; color: var(--accent); letter-spacing: 3px;">CELESTIAL GATE TAROT</p>
     <h1>Celestial Oracle</h1>
@@ -391,19 +383,15 @@
       <button class="reset-btn" onclick="resetDeck()">รีเซ็ต</button>
     </div>
 
-    <!-- ข้อความแนะนำผู้ใช้ -->
     <div class="instruction-text" id="instruction">กรุณากดเลือกรูปแบบการดูไพ่ หรือกดสับไพ่ก่อนครับ</div>
 
-    <!-- กองไพ่ที่กางให้หยิบ -->
     <div class="fan-deck-container" id="fanDeckContainer"></div>
 
-    <!-- พื้นแสดงผลไพ่และปุ่มเซฟรูป -->
     <div id="resultArea" style="display: none;">
       <div id="cardsDisplay" style="width: 100%;"></div>
       <button class="save-btn" id="saveBtn" onclick="saveTarotImage()">💾 เซฟภาพหน้าไพ่</button>
     </div>
 
-    <!-- โซนสำหรับปุ่มไพ่ขยาย -->
     <div class="clarifier-wrapper" id="clarifierWrapper" style="display: none;">
       <button class="clarifier-btn" id="clarifierBtn" onclick="drawClarifierCard()">+ เปิดไพ่ขยาย ( Clarifier Card )</button>
       <div class="cards-grid" id="clarifierDisplay" style="margin-top: 1.5rem; min-height: auto;"></div>
@@ -537,7 +525,7 @@
         cardDiv.style.transform = `rotate(${rotateDeg}deg)`;
         cardDiv.style.zIndex = index;
         
-        cardDiv.innerHTML = `<img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">`;
+        cardDiv.innerHTML = `<img src="assets/back/Card_Back.jpg" alt="" onerror="handleImageError(this)">`;
         
         cardDiv.onclick = () => selectCard(index, cardDiv);
         container.appendChild(cardDiv);
@@ -628,7 +616,7 @@
           <span class="card-title">${labelText}</span>
           <div class="card-flip-container" id="cardContainer-${i}">
             <div class="card-face card-back">
-              <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
+              <img src="assets/back/Card_Back.jpg" alt="" onerror="handleImageError(this)">
             </div>
             <div class="card-face card-front">
               <img src="${card.path}" alt="${card.name}" onerror="handleImageError(this)">
@@ -673,7 +661,7 @@
           <span class="card-title">${celticPositions[i]}</span>
           <div class="card-flip-container" id="cardContainer-${i}">
             <div class="card-face card-back">
-              <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
+              <img src="assets/back/Card_Back.jpg" alt="" onerror="handleImageError(this)">
             </div>
             <div class="card-face card-front">
               <img src="${card.path}" alt="${card.name}" onerror="handleImageError(this)">
@@ -713,7 +701,7 @@
         <span class="card-title">CLARIFIER ${index}</span>
         <div class="card-flip-container" id="clarifierContainer-${index}">
           <div class="card-face card-back">
-            <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
+            <img src="assets/back/Card_Back.jpg" alt="" onerror="handleImageError(this)">
           </div>
           <div class="card-face card-front">
             <img src="${randomCard.path}" alt="${randomCard.name}" onerror="handleImageError(this)">
