@@ -209,7 +209,7 @@
       letter-spacing: 1px;
     }
 
-    /* --- CELTIC CROSS LAYOUT (10 CARDS) --- */
+    /* --- CELTIC CROSS LAYOUT (10 CARDS - Adjusted to Match Image) --- */
     .celtic-cross-layout {
       display: flex;
       justify-content: center;
@@ -230,24 +230,24 @@
       align-items: center;
     }
 
-    /* ตำแหน่งเจาะจงของไพ่แต่ละใบใน Celtic Cross */
+    /* จัดตำแหน่งไพ่ให้ตรงตามผังไดอะแกรมรูปภาพที่ 2 */
     .celtic-cross-circle .card-item[data-pos="1"] { position: absolute; z-index: 1; }
     .celtic-cross-circle .card-item[data-pos="2"] { position: absolute; z-index: 2; transform: rotate(90deg) scale(0.95); }
-    .celtic-cross-circle .card-item[data-pos="3"] { position: absolute; bottom: 0; }
-    .celtic-cross-circle .card-item[data-pos="4"] { position: absolute; left: 0; }
-    .celtic-cross-circle .card-item[data-pos="5"] { position: absolute; top: 0; }
-    .celtic-cross-circle .card-item[data-pos="6"] { position: absolute; right: 0; }
+    .celtic-cross-circle .card-item[data-pos="3"] { position: absolute; top: 0; }
+    .celtic-cross-circle .card-item[data-pos="4"] { position: absolute; right: 0; }
+    .celtic-cross-circle .card-item[data-pos="5"] { position: absolute; bottom: 0; }
+    .celtic-cross-circle .card-item[data-pos="6"] { position: absolute; left: 0; }
 
-    /* ฝั่งเสาขวามือ (Staff) */
+    /* ฝั่งเสาขวามือ (Staff 7-10 เรียงขึ้นไป) */
     .celtic-cross-staff {
       display: flex;
-      flex-direction: column-reverse; /* เรียงจากใบที่ 7 ด้านล่างขึ้นใบที่ 10 ด้านบน */
+      flex-direction: column-reverse; /* เรียงจาก 7 อยู่ล่างสุด ขึ้นไป 10 อยู่บนสุด */
       gap: 1rem;
     }
 
     /* --- 3D CARD FLIP CONTAINER --- */
     .card-flip-container {
-      width: 130px; /* ขนาดกะทัดรัดขึ้นเพื่อให้อ่าน Celtic Cross ง่ายบนทุกหน้าจอ */
+      width: 130px;
       height: 225px;
       position: relative;
       transform-style: preserve-3d;
@@ -256,7 +256,6 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
     }
 
-    /* ปรับขนาดใหญ่ขึ้นเวลาเปิด 1 หรือ 3 ใบ */
     .cards-grid .card-flip-container {
       width: 200px;
       height: 345px;
@@ -332,7 +331,6 @@
       document.getElementById('mainContainer').classList.add('visible');
     }
 
-    // กองไพ่ 78 ใบมาตรฐาน
     const tarotDeck = [
       // Major Arcana (22)
       { name: "The Fool", path: "assets/major/01_The_Fool.jpg" },
@@ -432,7 +430,6 @@
       return shuffled;
     }
 
-    // ฟังก์ชันเปิดไพ่ 1 และ 3 ใบ
     function drawCards(count) {
       const display = document.getElementById('cardsDisplay');
       display.className = 'cards-grid';
@@ -468,14 +465,13 @@
       }
     }
 
-    // ชื่อตำแหน่งของ Celtic Cross
+    // กำหนดชื่อตำแหน่งให้ตรงตามไดอะแกรมรูปภาพใหม่
     const celticPositions = [
-      "1. Present", "2. Challenge", "3. Foundation",
-      "4. Past", "5. Crown/Goal", "6. Future",
+      "1. Present", "2. Challenge", "3. Crown/Goal",
+      "4. Future", "5. Foundation", "6. Past",
       "7. Self", "8. Environment", "9. Hopes/Fears", "10. Outcome"
     ];
 
-    // ฟังก์ชันเปิดไพ่ 10 ใบ (Celtic Cross)
     function drawCelticCross() {
       const display = document.getElementById('cardsDisplay');
       display.className = 'celtic-cross-layout';
