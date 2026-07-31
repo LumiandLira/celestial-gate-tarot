@@ -71,7 +71,6 @@
       box-shadow: none;
     }
 
-    /* สถานะสับไพ่ */
     .shuffling-status {
       color: var(--accent-color);
       font-size: 1.2rem;
@@ -162,7 +161,6 @@
       font-weight: bold;
     }
 
-    /* โซนไพ่ขยาย (Clarifier) */
     .clarifier-section {
       width: 100%;
       max-width: 1200px;
@@ -214,7 +212,6 @@
   </div>
 
   <script>
-    // รายชื่อไพ่ทั้งหมด 78 ใบ
     const deckData = [
       // Major Arcana (22)
       { name: "The Fool", file: "assets/major/00_Fool.jpg" },
@@ -308,7 +305,6 @@
     let remainingDeck = [];
     let clarifierCount = 0;
 
-    // ระบบสลับนามสกุลอัตโนมัติ (.jpg -> .png / card_back.jpg -> card-back.jpg)
     function handleImageError(imgElement, originalPath) {
       if (imgElement.dataset.tried) return;
       imgElement.dataset.tried = "true";
@@ -333,7 +329,6 @@
       }
     }
 
-    // เริ่มต้นการเปิดไพ่พร้อมแอนิเมชันสับไพ่
     function startDrawing(count) {
       const status = document.getElementById('shuffling-status');
       const mainContainer = document.getElementById('main-cards-container');
@@ -346,7 +341,7 @@
       setTimeout(() => {
         status.style.display = 'none';
         drawCards(count);
-      }, 600);
+      }, 500);
     }
 
     function drawCards(count) {
@@ -432,6 +427,11 @@
         addClarifierBtn.innerText = "เปิดไพ่ขยายครบแล้ว (สูงสุด 3 ใบ)";
       }
     }
+
+    // เมื่อเปิดหน้าเว็บมา ให้โหลดไพ่ 3 ใบขึ้นทันทีอัตโนมัติ
+    window.onload = function() {
+      drawCards(3);
+    };
   </script>
 </body>
 </html>
