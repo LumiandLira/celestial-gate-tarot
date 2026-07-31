@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Celestial Gate Tarot</title>
+  <!-- โหลดไลบรารี html2canvas สำหรับแปลง div เป็นรูปภาพ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
       --bg-color: #0b0712;
@@ -111,7 +113,7 @@
       flex-wrap: wrap;
     }
 
-    button.action-btn, button.shuffle-btn, button.clarifier-btn {
+    button.action-btn, button.shuffle-btn, button.clarifier-btn, button.save-btn {
       background: linear-gradient(135deg, #a855f7, #6b21a8);
       color: white;
       border: none;
@@ -125,6 +127,11 @@
 
     button.shuffle-btn {
       background: linear-gradient(135deg, #e879f9, #a855f7);
+    }
+
+    button.save-btn {
+      background: linear-gradient(135deg, #10b981, #047857);
+      margin-top: 1rem;
     }
 
     button.clarifier-btn {
@@ -197,6 +204,16 @@
       opacity: 0;
       pointer-events: none;
       transform: translateY(-50px) scale(0.5) !important;
+    }
+
+    /* --- RESULT AREA WRAPPER (สำหรับเซฟภาพ) --- */
+    #resultArea {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      border-radius: 12px;
     }
 
     /* --- STANDARD GRID & CELTIC CROSS LAYOUT --- */
@@ -277,7 +294,7 @@
 
     .cards-grid .card-flip-container { width: 160px; height: 275px; }
     .card-flip-container.flipped { transform: rotateY(180deg); }
-    .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container.flipped { transform: rotateY(180deg); }
+    .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container.flipped { transform: rotateY(180deg) rotate(90deg); }
 
     .card-face {
       position: absolute; width: 100%; height: 100%;
@@ -294,26 +311,42 @@
     /* --- RESPONSIVE FOR MOBILE (IPHONE) --- */
     @media (max-width: 768px) {
       .celtic-cross-layout {
+        flex-direction: column;
         gap: 2rem;
       }
       .celtic-cross-circle {
-        width: 310px;
-        height: 440px;
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        position: relative;
+      }
+      .celtic-cross-circle .card-item {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        margin-bottom: 0.5rem;
+      }
+      .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container.flipped {
+        transform: rotateY(180deg) !important;
       }
       .card-flip-container {
-        width: 95px;
-        height: 162px;
+        width: 110px;
+        height: 188px;
       }
       .card-title {
-        font-size: 0.65rem;
+        font-size: 0.7rem;
       }
       .card-desc {
-        font-size: 0.58rem;
-        max-width: 95px;
+        font-size: 0.6rem;
+        max-width: 180px;
       }
       .card-name-text {
-        font-size: 0.7rem;
-        max-width: 95px;
+        font-size: 0.75rem;
+        max-width: 180px;
       }
     }
 
@@ -363,8 +396,11 @@
     <!-- กองไพ่ที่กางให้หยิบ -->
     <div class="fan-deck-container" id="fanDeckContainer"></div>
 
-    <!-- กระดานแสดงไพ่ที่เลือก -->
-    <div id="cardsDisplay"></div>
+    <!-- พื้นที่สำหรับแสดงผลไพ่และปุ่มเซฟรูป -->
+    <div id="resultArea" style="display: none;">
+      <div id="cardsDisplay" style="width: 100%;"></div>
+      <button class="save-btn" id="saveBtn" onclick="saveTarotImage()">💾 เซฟภาพหน้าไพ่</button>
+    </div>
 
     <!-- โซนสำหรับปุ่มไพ่ขยาย -->
     <div class="clarifier-wrapper" id="clarifierWrapper" style="display: none;">
@@ -508,6 +544,7 @@
     }
 
     function prepareMode(mode) {
+      document.getElementById('resultArea').style.display = 'none';
       document.getElementById('cardsDisplay').innerHTML = '';
       document.getElementById('clarifierDisplay').innerHTML = '';
       document.getElementById('clarifierWrapper').style.display = 'none';
@@ -548,6 +585,7 @@
 
       if (selectedCards.length === targetCount) {
         document.getElementById('instruction').innerText = "กำลังจัดวางไพ่ของคุณ...";
+        document.getElementById('resultArea').style.display = 'flex';
         setTimeout(() => {
           if (targetCount === 10) {
             displayCelticCross();
@@ -707,6 +745,29 @@
       }
     }
 
+    function saveTarotImage() {
+      const resultArea = document.getElementById('resultArea');
+      const saveBtn = document.getElementById('saveBtn');
+      
+      saveBtn.style.display = 'none'; // ซ่อนปุ่มชั่วคราวก่อนจับภาพ
+
+      html2canvas(resultArea, {
+        backgroundColor: '#0b0712',
+        scale: 2,
+        useCORS: true
+      }).then(canvas => {
+        saveBtn.style.display = 'block'; // แสดงปุ่มกลับมาเหมือนเดิม
+        
+        const link = document.createElement('a');
+        link.download = 'tarot-reading.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }).catch(err => {
+        saveBtn.style.display = 'block';
+        alert("ไม่สามารถเซฟภาพได้ กรุณาลองใหม่อีกครั้งครับ");
+      });
+    }
+
     function handleImageError(img) {
       if (!img.dataset.tryCount) img.dataset.tryCount = "1";
       const count = parseInt(img.dataset.tryCount);
@@ -725,6 +786,7 @@
     }
 
     function resetDeck() {
+      document.getElementById('resultArea').style.display = 'none';
       document.getElementById('cardsDisplay').innerHTML = '';
       document.getElementById('clarifierDisplay').innerHTML = '';
       document.getElementById('clarifierWrapper').style.display = 'none';
