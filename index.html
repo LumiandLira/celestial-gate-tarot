@@ -91,7 +91,7 @@
     p.subtitle { color: var(--text-sub); font-size: 0.95rem; font-style: italic; }
 
     .container {
-      max-width: 1100px;
+      max-width: 1200px;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -214,15 +214,25 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.3rem;
       perspective: 1000px;
+      text-align: center;
     }
 
     .card-title {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--accent);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+      font-weight: bold;
+    }
+
+    .card-desc {
+      font-size: 0.68rem;
+      color: var(--text-sub);
+      font-style: italic;
+      max-width: 130px;
+      line-height: 1.2;
     }
 
     .celtic-cross-layout {
@@ -237,8 +247,8 @@
 
     .celtic-cross-circle {
       position: relative;
-      width: 480px;
-      height: 620px;
+      width: 500px;
+      height: 640px;
     }
 
     .celtic-cross-circle .card-item[data-pos="1"] {
@@ -248,8 +258,8 @@
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(90deg); z-index: 2;
     }
     .celtic-cross-circle .card-item[data-pos="3"] { position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
-    .celtic-cross-circle .card-item[data-pos="4"] { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
-    .celtic-cross-circle .card-item[data-pos="5"] { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+    .celtic-cross-circle .card-item[data-pos="4"] { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+    .celtic-cross-circle .card-item[data-pos="5"] { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
     .celtic-cross-circle .card-item[data-pos="6"] { position: absolute; left: 0; top: 50%; transform: translateY(-50%); }
 
     .celtic-cross-staff { display: flex; flex-direction: column-reverse; gap: 1rem; }
@@ -265,7 +275,7 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
     }
 
-    .cards-grid .card-flip-container { width: 180px; height: 310px; }
+    .cards-grid .card-flip-container { width: 160px; height: 275px; }
     .card-flip-container.flipped { transform: rotateY(180deg); }
     .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container.flipped { transform: rotateY(180deg); }
 
@@ -279,7 +289,7 @@
     .card-face img { width: 100%; height: 100%; object-fit: cover; }
     .card-back { transform: rotateY(0deg); }
     .card-front { transform: rotateY(180deg); }
-    .card-name-text { font-size: 0.85rem; max-width: 140px; text-align: center; }
+    .card-name-text { font-size: 0.8rem; max-width: 130px; text-align: center; color: var(--text-main); margin-top: 2px; }
 
     /* --- SECTION ไพ่ขยาย (CLARIFIER) --- */
     .clarifier-wrapper {
@@ -505,7 +515,6 @@
 
       cardElem.classList.add('selected');
       
-      // ดึงไพ่ออกจากสำรับที่ใช้งานอยู่
       const pickedCard = activeDeck[index];
       selectedCards.push(pickedCard);
 
@@ -521,7 +530,6 @@
           }
           document.getElementById('instruction').innerText = "กางไพ่เรียบร้อยแล้ว";
 
-          // แสดงปุ่มเปิดไพ่ขยายเฉพาะโหมด 1, 3 และ 5 ใบ
           if ([1, 3, 5].includes(currentMode)) {
             document.getElementById('clarifierWrapper').style.display = 'flex';
             const btn = document.getElementById('clarifierBtn');
@@ -529,7 +537,7 @@
             btn.innerText = "+ เปิดไพ่ขยาย ( Clarifier Card )";
           }
 
-          targetCount = 0; // Reset target
+          targetCount = 0;
         }, 500);
       }
     }
@@ -574,10 +582,18 @@
       });
     }
 
+    // อัปเดตข้อมูลตำแหน่งและคำอธิบายตามตำรา Celtic Cross ของคุณ
     const celticPositions = [
-      "1. Present", "2. Challenge", "3. Crown / Goal", 
-      "4. Future", "5. Foundation", "6. Past",
-      "7. Self", "8. Environment", "9. Hopes / Fears", "10. Outcome"
+      { title: "1. Significator", desc: "ตัวตน / สถานการณ์" },
+      { title: "2. Crossing Card", desc: "อุปสรรคที่ขวางอยู่" },
+      { title: "3. Crowning Card", desc: "เป้าหมาย / สิ่งที่คาดหวัง" },
+      { title: "4. Base of the Matter", desc: "รากเหง้า / พื้นฐานปัญหา" },
+      { title: "5. Past Influences", desc: "อิทธิพลในอดีต" },
+      { title: "6. Forthcoming", desc: "อนาคตอันใกล้" },
+      { title: "7. Where One Finds", desc: "มุมมองหรือตัวตนเรา" },
+      { title: "8. Views of Others", desc: "มุมมองคนรอบข้าง" },
+      { title: "9. Hopes and Fears", desc: "ความหวังและความกลัว" },
+      { title: "10. Final Outcome", desc: "บทสรุปสุดท้าย" }
     ];
 
     function displayCelticCross() {
@@ -593,12 +609,14 @@
 
       selectedCards.forEach((card, i) => {
         const posNum = i + 1;
+        const posData = celticPositions[i];
         const cardDiv = document.createElement('div');
         cardDiv.className = 'card-item';
         cardDiv.setAttribute('data-pos', posNum);
         
         cardDiv.innerHTML = `
-          <span class="card-title">${celticPositions[i]}</span>
+          <span class="card-title">${posData.title}</span>
+          <span class="card-desc">${posData.desc}</span>
           <div class="card-flip-container" id="cardContainer-${i}">
             <div class="card-face card-back">
               <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
@@ -623,11 +641,9 @@
       });
     }
 
-    // ฟังก์ชั่นสุ่มสุ่มเปิดไพ่ขยาย (Clarifier)
     function drawClarifierCard() {
       if (clarifierCards.length >= 3) return;
 
-      // กรองไพ่ที่ยังไม่ได้ถูกเลือก
       const unpickedDeck = activeDeck.filter(c => !selectedCards.includes(c) && !clarifierCards.includes(c));
       if (unpickedDeck.length === 0) return;
 
