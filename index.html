@@ -1,10 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
- <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Celestial Gate Tarot</title>
   <style>
     :root {
       --bg-color: #0b0712;
@@ -156,7 +149,7 @@
       margin: 0.5rem 0;
     }
 
-    /* --- FAN DECK (กางไพ่เรียงแถว) --- */
+    /* --- FAN DECK --- */
     .fan-deck-container {
       width: 100%;
       height: 220px;
@@ -291,7 +284,33 @@
     .card-front { transform: rotateY(180deg); }
     .card-name-text { font-size: 0.8rem; max-width: 130px; text-align: center; color: var(--text-main); margin-top: 2px; }
 
-    /* --- SECTION ไพ่ขยาย (CLARIFIER) --- */
+    /* --- RESPONSIVE FOR MOBILE (IPHONE) --- */
+    @media (max-width: 768px) {
+      .celtic-cross-layout {
+        gap: 2rem;
+      }
+      .celtic-cross-circle {
+        width: 310px;
+        height: 440px;
+      }
+      .card-flip-container {
+        width: 95px;
+        height: 162px;
+      }
+      .card-title {
+        font-size: 0.65rem;
+      }
+      .card-desc {
+        font-size: 0.58rem;
+        max-width: 95px;
+      }
+      .card-name-text {
+        font-size: 0.7rem;
+        max-width: 95px;
+      }
+    }
+
+    /* --- CLARIFIER SECTION --- */
     .clarifier-wrapper {
       width: 100%;
       display: flex;
@@ -302,415 +321,3 @@
       border-top: 1px dashed rgba(216, 180, 254, 0.3);
     }
   </style>
-</head>
-<body>
-
-  <!-- INTRO SCREEN -->
-  <div id="intro-screen">
-    <p style="font-size: 0.85rem; color: var(--accent); letter-spacing: 4px; margin-bottom: 0.8rem;">CELESTIAL GATE TAROT</p>
-    <div class="portal-card-wrapper" onclick="enterGate()">
-      <img src="assets/major/00_Celestial_Gate.jpg" alt="Celestial Gate Entrance" onerror="handleImageError(this)">
-    </div>
-    <button class="enter-btn" onclick="enterGate()">ENTER THE GATE</button>
-  </div>
-
-  <!-- MAIN APP -->
-  <header>
-    <p style="font-size: 0.8rem; color: var(--accent); letter-spacing: 3px;">CELESTIAL GATE TAROT</p>
-    <h1>Celestial Oracle</h1>
-    <p class="subtitle">Focus your mind, pick your cards, and reveal your path.</p>
-  </header>
-
-  <div class="container" id="mainContainer">
-    <div class="controls">
-      <button class="shuffle-btn" onclick="prepareMode('shuffle')">🂠 สับไพ่ (Shuffle)</button>
-      <button class="action-btn" onclick="prepareMode(1)">เลือก 1 ใบ</button>
-      <button class="action-btn" onclick="prepareMode(3)">เลือก 3 ใบ</button>
-      <button class="action-btn" onclick="prepareMode(5)">เลือก 5 ใบ</button>
-      <button class="action-btn" onclick="prepareMode(10)">เลือก 10 ใบ (Celtic Cross)</button>
-      <button class="reset-btn" onclick="resetDeck()">รีเซ็ต</button>
-    </div>
-
-    <!-- ข้อความแนะนำผู้ใช้ -->
-    <div class="instruction-text" id="instruction">กรุณากดเลือกรูปแบบการดูไพ่ หรือกดสับไพ่ก่อนครับ</div>
-
-    <!-- กองไพ่ที่กางให้หยิบ -->
-    <div class="fan-deck-container" id="fanDeckContainer"></div>
-
-    <!-- กระดานแสดงไพ่ที่เลือก -->
-    <div id="cardsDisplay"></div>
-
-    <!-- โซนสำหรับปุ่มไพ่ขยาย -->
-    <div class="clarifier-wrapper" id="clarifierWrapper" style="display: none;">
-      <button class="clarifier-btn" id="clarifierBtn" onclick="drawClarifierCard()">+ เปิดไพ่ขยาย ( Clarifier Card )</button>
-      <div class="cards-grid" id="clarifierDisplay" style="margin-top: 1.5rem; min-height: auto;"></div>
-    </div>
-  </div>
-
-  <script>
-    let activeDeck = [];
-    let selectedCards = [];
-    let clarifierCards = [];
-    let targetCount = 0;
-    let currentMode = 0;
-
-    function enterGate() {
-      document.getElementById('intro-screen').classList.add('hidden');
-      document.getElementById('mainContainer').classList.add('visible');
-      resetDeck();
-    }
-
-    const tarotDeck = [
-      { name: "The Fool", path: "assets/major/01_The_Fool.jpg" },
-      { name: "The Magician", path: "assets/major/02_The_Magician.jpg" },
-      { name: "The High Priestess", path: "assets/major/03_The_High_Priestess.jpg" },
-      { name: "The Empress", path: "assets/major/04_The_Empress.jpg" },
-      { name: "The Emperor", path: "assets/major/05_The_Emperor.jpg" },
-      { name: "The Hierophant", path: "assets/major/06_The_Hierophant.jpg" },
-      { name: "The Lovers", path: "assets/major/07_The_Lovers.jpg" },
-      { name: "The Chariot", path: "assets/major/08_The_Chariot.jpg" },
-      { name: "Strength", path: "assets/major/09_Strength.jpg" },
-      { name: "The Hermit", path: "assets/major/10_The_Hermit.jpg" },
-      { name: "Wheel of Fortune", path: "assets/major/11_Wheel_of_Fortune.jpg" },
-      { name: "Justice", path: "assets/major/12_Justice.jpg" },
-      { name: "The Hanged Man", path: "assets/major/13_The_Hanged_Man.jpg" },
-      { name: "Death", path: "assets/major/14_Death.jpg" },
-      { name: "Temperance", path: "assets/major/15_Temperance.jpg" },
-      { name: "The Devil", path: "assets/major/16_The_Devil.jpg" },
-      { name: "The Tower", path: "assets/major/17_The_Tower.jpg" },
-      { name: "The Star", path: "assets/major/18_The_Star.jpg" },
-      { name: "The Moon", path: "assets/major/19_The_Moon.jpg" },
-      { name: "The Sun", path: "assets/major/20_The_Sun.jpg" },
-      { name: "Judgement", path: "assets/major/21_Judgement.jpg" },
-      { name: "The World", path: "assets/major/22_The_World.jpg" },
-
-      { name: "Ace of Cups", path: "assets/minor/Cups_Ace.jpg" },
-      { name: "Two of Cups", path: "assets/minor/Cups_Two.jpg" },
-      { name: "Three of Cups", path: "assets/minor/Cups_Three.jpg" },
-      { name: "Four of Cups", path: "assets/minor/Cups_Four.jpg" },
-      { name: "Five of Cups", path: "assets/minor/Cups_Five.jpg" },
-      { name: "Six of Cups", path: "assets/minor/Cups_Six.jpg" },
-      { name: "Seven of Cups", path: "assets/minor/Cups_Seven.jpg" },
-      { name: "Eight of Cups", path: "assets/minor/Cups_Eight.jpg" },
-      { name: "Nine of Cups", path: "assets/minor/Cups_Nine.jpg" },
-      { name: "Ten of Cups", path: "assets/minor/Cups_Ten.jpg" },
-      { name: "Page of Cups", path: "assets/minor/Cups_Page.jpg" },
-      { name: "Knight of Cups", path: "assets/minor/Cups_Knight.jpg" },
-      { name: "Queen of Cups", path: "assets/minor/Cups_Queen.jpg" },
-      { name: "King of Cups", path: "assets/minor/Cups_King.jpg" },
-
-      { name: "Ace of Pentacles", path: "assets/minor/Pentacles_Ace.jpg" },
-      { name: "Two of Pentacles", path: "assets/minor/Pentacles_Two.jpg" },
-      { name: "Three of Pentacles", path: "assets/minor/Pentacles_Three.jpg" },
-      { name: "Four of Pentacles", path: "assets/minor/Pentacles_Four.jpg" },
-      { name: "Five of Pentacles", path: "assets/minor/Pentacles_Five.jpg" },
-      { name: "Six of Pentacles", path: "assets/minor/Pentacles_Six.jpg" },
-      { name: "Seven of Pentacles", path: "assets/minor/Pentacles_Seven.jpg" },
-      { name: "Eight of Pentacles", path: "assets/minor/Pentacles_Eight.jpg" },
-      { name: "Nine of Pentacles", path: "assets/minor/Pentacles_Nine.jpg" },
-      { name: "Ten of Pentacles", path: "assets/minor/Pentacles_Ten.jpg" },
-      { name: "Page of Pentacles", path: "assets/minor/Pentacles_Page.jpg" },
-      { name: "Knight of Pentacles", path: "assets/minor/Pentacles_Knight.jpg" },
-      { name: "Queen of Pentacles", path: "assets/minor/Pentacles_Queen.jpg" },
-      { name: "King of Pentacles", path: "assets/minor/Pentacles_King.jpg" },
-
-      { name: "Ace of Swords", path: "assets/minor/Swords_Ace.jpg" },
-      { name: "Two of Swords", path: "assets/minor/Swords_Two.jpg" },
-      { name: "Three of Swords", path: "assets/minor/Swords_Three.jpg" },
-      { name: "Four of Swords", path: "assets/minor/Swords_Four.jpg" },
-      { name: "Five of Swords", path: "assets/minor/Swords_Five.jpg" },
-      { name: "Six of Swords", path: "assets/minor/Swords_Six.jpg" },
-      { name: "Seven of Swords", path: "assets/minor/Swords_Seven.jpg" },
-      { name: "Eight of Swords", path: "assets/minor/Swords_Eight.jpg" },
-      { name: "Nine of Swords", path: "assets/minor/Swords_Nine.jpg" },
-      { name: "Ten of Swords", path: "assets/minor/Swords_Ten.jpg" },
-      { name: "Page of Swords", path: "assets/minor/Swords_Page.jpg" },
-      { name: "Knight of Swords", path: "assets/minor/Swords_Knight.jpg" },
-      { name: "Queen of Swords", path: "assets/minor/Swords_Queen.jpg" },
-      { name: "King of Swords", path: "assets/minor/Swords_King.jpg" },
-
-      { name: "Ace of Wands", path: "assets/minor/Wands_Ace.jpg" },
-      { name: "Two of Wands", path: "assets/minor/Wands_Two.jpg" },
-      { name: "Three of Wands", path: "assets/minor/Wands_Three.jpg" },
-      { name: "Four of Wands", path: "assets/minor/Wands_Four.jpg" },
-      { name: "Five of Wands", path: "assets/minor/Wands_Five.jpg" },
-      { name: "Six of Wands", path: "assets/minor/Wands_Six.jpg" },
-      { name: "Seven of Wands", path: "assets/minor/Wands_Seven.jpg" },
-      { name: "Eight of Wands", path: "assets/minor/Wands_Eight.jpg" },
-      { name: "Nine of Wands", path: "assets/minor/Wands_Nine.jpg" },
-      { name: "Ten of Wands", path: "assets/minor/Wands_Ten.jpg" },
-      { name: "Page of Wands", path: "assets/minor/Wands_Page.jpg" },
-      { name: "Knight of Wands", path: "assets/minor/Wands_Knight.jpg" },
-      { name: "Queen of Wands", path: "assets/minor/Wands_Queen.jpg" },
-      { name: "King of Wands", path: "assets/minor/Wands_King.jpg" }
-    ];
-
-    function shuffleArray(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
-    function renderFanDeck() {
-      const container = document.getElementById('fanDeckContainer');
-      container.innerHTML = '';
-      
-      const totalCards = activeDeck.length;
-      const spreadWidth = Math.min(window.innerWidth - 40, 950);
-      const step = spreadWidth / totalCards;
-
-      activeDeck.forEach((card, index) => {
-        const cardDiv = document.createElement('div');
-        cardDiv.className = 'fan-card';
-        cardDiv.id = `fan-card-${index}`;
-        
-        const leftPos = (index * step);
-        const rotateDeg = ((index - totalCards / 2) * 0.35);
-        
-        cardDiv.style.left = `${leftPos}px`;
-        cardDiv.style.transform = `rotate(${rotateDeg}deg)`;
-        cardDiv.style.zIndex = index;
-        
-        cardDiv.innerHTML = `<img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">`;
-        
-        cardDiv.onclick = () => selectCard(index, cardDiv);
-        container.appendChild(cardDiv);
-      });
-    }
-
-    function prepareMode(mode) {
-      document.getElementById('cardsDisplay').innerHTML = '';
-      document.getElementById('clarifierDisplay').innerHTML = '';
-      document.getElementById('clarifierWrapper').style.display = 'none';
-      selectedCards = [];
-      clarifierCards = [];
-
-      if (mode === 'shuffle') {
-        activeDeck = shuffleArray(tarotDeck);
-        renderFanDeck();
-        document.getElementById('instruction').innerText = "สับไพ่เรียบร้อยแล้ว กรุณากดเลือกจำนวนไพ่ที่ต้องการดูครับ";
-        return;
-      }
-
-      if (activeDeck.length === 0) {
-        activeDeck = shuffleArray(tarotDeck);
-        renderFanDeck();
-      }
-
-      targetCount = mode;
-      currentMode = mode;
-      document.getElementById('instruction').innerText = `กรุณาแตะเลือกไพ่จากกองด้านบนให้ครบ ${targetCount} ใบ (เลือกแล้ว 0/${targetCount})`;
-    }
-
-    function selectCard(index, cardElem) {
-      if (targetCount === 0) {
-        alert("กรุณากดเลือกจำนวนไพ่ที่ต้องการดูก่อนครับ (1 ใบ, 3 ใบ, 5 ใบ หรือ Celtic Cross)");
-        return;
-      }
-
-      if (cardElem.classList.contains('selected')) return;
-
-      cardElem.classList.add('selected');
-      
-      const pickedCard = activeDeck[index];
-      selectedCards.push(pickedCard);
-
-      document.getElementById('instruction').innerText = `เลือกแล้ว ${selectedCards.length}/${targetCount} ใบ`;
-
-      if (selectedCards.length === targetCount) {
-        document.getElementById('instruction').innerText = "กำลังจัดวางไพ่ของคุณ...";
-        setTimeout(() => {
-          if (targetCount === 10) {
-            displayCelticCross();
-          } else {
-            displayStandardGrid();
-          }
-          document.getElementById('instruction').innerText = "กางไพ่เรียบร้อยแล้ว";
-
-          if ([1, 3, 5].includes(currentMode)) {
-            document.getElementById('clarifierWrapper').style.display = 'flex';
-            const btn = document.getElementById('clarifierBtn');
-            btn.disabled = false;
-            btn.innerText = "+ เปิดไพ่ขยาย ( Clarifier Card )";
-          }
-
-          targetCount = 0;
-        }, 500);
-      }
-    }
-
-    function displayStandardGrid() {
-      const display = document.getElementById('cardsDisplay');
-      display.className = 'cards-grid';
-      display.innerHTML = '';
-
-      selectedCards.forEach((card, i) => {
-        const cardDiv = document.createElement('div');
-        cardDiv.className = 'card-item';
-        
-        let labelText = `CARD ${i + 1}`;
-        if (selectedCards.length === 3) {
-          const l3 = ["Past / อดีต", "Present / ปัจจุบัน", "Future / อนาคต"];
-          labelText = l3[i];
-        } else if (selectedCards.length === 5) {
-          const l5 = ["Present / ปัจจุบัน", "Challenge / อุปสรรค", "Past / อดีต", "Future / อนาคต", "Outcome / บทสรุป"];
-          labelText = l5[i];
-        }
-
-        cardDiv.innerHTML = `
-          <span class="card-title">${labelText}</span>
-          <div class="card-flip-container" id="cardContainer-${i}">
-            <div class="card-face card-back">
-              <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
-            </div>
-            <div class="card-face card-front">
-              <img src="${card.path}" alt="${card.name}" onerror="handleImageError(this)">
-            </div>
-          </div>
-          <p class="card-name-text">${card.name}</p>
-        `;
-        
-        display.appendChild(cardDiv);
-
-        setTimeout(() => {
-          const containerElem = document.getElementById(`cardContainer-${i}`);
-          if (containerElem) containerElem.classList.add('flipped');
-        }, 200 + (i * 250));
-      });
-    }
-
-    // อัปเดตข้อมูลตำแหน่งและคำอธิบายตามตำรา Celtic Cross ของคุณ
-    const celticPositions = [
-      { title: "1. Significator", desc: "ตัวตน / สถานการณ์" },
-      { title: "2. Crossing Card", desc: "อุปสรรคที่ขวางอยู่" },
-      { title: "3. Crowning Card", desc: "เป้าหมาย / สิ่งที่คาดหวัง" },
-      { title: "4. Base of the Matter", desc: "รากเหง้า / พื้นฐานปัญหา" },
-      { title: "5. Past Influences", desc: "อิทธิพลในอดีต" },
-      { title: "6. Forthcoming", desc: "อนาคตอันใกล้" },
-      { title: "7. Where One Finds", desc: "มุมมองหรือตัวตนเรา" },
-      { title: "8. Views of Others", desc: "มุมมองคนรอบข้าง" },
-      { title: "9. Hopes and Fears", desc: "ความหวังและความกลัว" },
-      { title: "10. Final Outcome", desc: "บทสรุปสุดท้าย" }
-    ];
-
-    function displayCelticCross() {
-      const display = document.getElementById('cardsDisplay');
-      display.className = 'celtic-cross-layout';
-      display.innerHTML = `
-        <div class="celtic-cross-circle" id="celticCircle"></div>
-        <div class="celtic-cross-staff" id="celticStaff"></div>
-      `;
-
-      const circleElem = document.getElementById('celticCircle');
-      const staffElem = document.getElementById('celticStaff');
-
-      selectedCards.forEach((card, i) => {
-        const posNum = i + 1;
-        const posData = celticPositions[i];
-        const cardDiv = document.createElement('div');
-        cardDiv.className = 'card-item';
-        cardDiv.setAttribute('data-pos', posNum);
-        
-        cardDiv.innerHTML = `
-          <span class="card-title">${posData.title}</span>
-          <span class="card-desc">${posData.desc}</span>
-          <div class="card-flip-container" id="cardContainer-${i}">
-            <div class="card-face card-back">
-              <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
-            </div>
-            <div class="card-face card-front">
-              <img src="${card.path}" alt="${card.name}" onerror="handleImageError(this)">
-            </div>
-          </div>
-          <p class="card-name-text">${card.name}</p>
-        `;
-
-        if (posNum <= 6) {
-          circleElem.appendChild(cardDiv);
-        } else {
-          staffElem.appendChild(cardDiv);
-        }
-
-        setTimeout(() => {
-          const containerElem = document.getElementById(`cardContainer-${i}`);
-          if (containerElem) containerElem.classList.add('flipped');
-        }, 250 + (i * 200));
-      });
-    }
-
-    function drawClarifierCard() {
-      if (clarifierCards.length >= 3) return;
-
-      const unpickedDeck = activeDeck.filter(c => !selectedCards.includes(c) && !clarifierCards.includes(c));
-      if (unpickedDeck.length === 0) return;
-
-      const randomCard = unpickedDeck[Math.floor(Math.random() * unpickedDeck.length)];
-      clarifierCards.push(randomCard);
-
-      const clarifierDisplay = document.getElementById('clarifierDisplay');
-      const index = clarifierCards.length;
-
-      const cardDiv = document.createElement('div');
-      cardDiv.className = 'card-item';
-      cardDiv.innerHTML = `
-        <span class="card-title">CLARIFIER ${index}</span>
-        <div class="card-flip-container" id="clarifierContainer-${index}">
-          <div class="card-face card-back">
-            <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
-          </div>
-          <div class="card-face card-front">
-            <img src="${randomCard.path}" alt="${randomCard.name}" onerror="handleImageError(this)">
-          </div>
-        </div>
-        <p class="card-name-text">${randomCard.name}</p>
-      `;
-
-      clarifierDisplay.appendChild(cardDiv);
-
-      setTimeout(() => {
-        const containerElem = document.getElementById(`clarifierContainer-${index}`);
-        if (containerElem) containerElem.classList.add('flipped');
-      }, 200);
-
-      const btn = document.getElementById('clarifierBtn');
-      if (clarifierCards.length >= 3) {
-        btn.disabled = true;
-        btn.innerText = "เปิดไพ่ขยายครบแล้ว (สูงสุด 3 ใบ)";
-      }
-    }
-
-    function handleImageError(img) {
-      if (!img.dataset.tryCount) img.dataset.tryCount = "1";
-      const count = parseInt(img.dataset.tryCount);
-      const src = img.src;
-
-      if (count === 1) {
-        img.dataset.tryCount = "2";
-        img.src = src.replace(/\.jpg$/i, '.PNG');
-      } else if (count === 2) {
-        img.dataset.tryCount = "3";
-        img.src = src.replace(/\.PNG$/, '.png');
-      } else if (count === 3) {
-        img.dataset.tryCount = "4";
-        img.src = src.replace(/\.png$/, '.jpeg');
-      }
-    }
-
-    function resetDeck() {
-      document.getElementById('cardsDisplay').innerHTML = '';
-      document.getElementById('clarifierDisplay').innerHTML = '';
-      document.getElementById('clarifierWrapper').style.display = 'none';
-      selectedCards = [];
-      clarifierCards = [];
-      targetCount = 0;
-      currentMode = 0;
-      activeDeck = shuffleArray(tarotDeck);
-      renderFanDeck();
-      document.getElementById('instruction').innerText = "กรุณากดเลือกรูปแบบการดูไพ่ หรือกดสับไพ่ก่อนครับ";
-    }
-  </script>
-</body>
-</html>
