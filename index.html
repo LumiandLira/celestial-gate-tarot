@@ -28,21 +28,21 @@
 
     header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
 
     h1 {
       color: var(--accent-color);
       font-size: 2.2rem;
       letter-spacing: 2px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       text-transform: uppercase;
     }
 
     .controls {
       display: flex;
       gap: 12px;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       flex-wrap: wrap;
       justify-content: center;
     }
@@ -71,6 +71,22 @@
       box-shadow: none;
     }
 
+    /* สถานะสับไพ่ */
+    .shuffling-status {
+      color: var(--accent-color);
+      font-size: 1.2rem;
+      margin: 20px 0;
+      letter-spacing: 1px;
+      display: none;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+
     .card-container {
       display: flex;
       gap: 20px;
@@ -78,7 +94,7 @@
       flex-wrap: wrap;
       max-width: 1200px;
       width: 100%;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
     }
 
     .card-slot {
@@ -92,6 +108,7 @@
       width: 180px;
       height: 310px;
       perspective: 1000px;
+      cursor: pointer;
     }
 
     .card {
@@ -116,32 +133,25 @@
       border-radius: 12px;
       overflow: hidden;
       border: 2px solid var(--accent-color);
+      background-color: var(--card-bg);
     }
 
     .card-back {
-      background-color: var(--card-bg);
-      background-image: radial-gradient(circle, #2a2f4c 10%, transparent 11%);
-      background-size: 10px 10px;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    .card-back img {
+    .card-back img, .card-front img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
 
     .card-front {
       transform: rotateY(180deg);
       background-color: #000;
-    }
-
-    .card-front img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
 
     .card-label {
@@ -152,7 +162,7 @@
       font-weight: bold;
     }
 
-    /* Section สำรับไพ่ขยาย (Clarifier Section) */
+    /* โซนไพ่ขยาย (Clarifier) */
     .clarifier-section {
       width: 100%;
       max-width: 1200px;
@@ -184,10 +194,12 @@
   </header>
 
   <div class="controls">
-    <button onclick="drawCards(1)">เปิดไพ่ 1 ใบ</button>
-    <button onclick="drawCards(3)">เปิดไพ่ 3 ใบ</button>
-    <button onclick="drawCards(5)">เปิดไพ่ 5 ใบ</button>
+    <button onclick="startDrawing(1)">เปิดไพ่ 1 ใบ</button>
+    <button onclick="startDrawing(3)">เปิดไพ่ 3 ใบ</button>
+    <button onclick="startDrawing(5)">เปิดไพ่ 5 ใบ</button>
   </div>
+
+  <div class="shuffling-status" id="shuffling-status">🔮 กำลังสับสำรับไพ่...</div>
 
   <!-- โซนไพ่หลัก -->
   <div class="card-container" id="main-cards-container"></div>
@@ -293,11 +305,26 @@
       { name: "King of Pentacles", file: "assets/minor/Pentacles_King.jpg" }
     ];
 
-    const cardBackPath = "assets/back/card_back.jpg";
     let remainingDeck = [];
     let clarifierCount = 0;
 
-    // สับสำรับไพ่
+    // ระบบสลับนามสกุลอัตโนมัติ (.jpg -> .png / card_back.jpg -> card-back.jpg)
+    function handleImageError(imgElement, originalPath) {
+      if (imgElement.dataset.tried) return;
+      imgElement.dataset.tried = "true";
+
+      if (originalPath.includes('card_back') || originalPath.includes('card-back')) {
+        imgElement.src = originalPath.includes('card_back.jpg') ? 'assets/back/card-back.jpg' : 'assets/back/card_back.jpg';
+        return;
+      }
+
+      if (originalPath.endsWith('.jpg')) {
+        imgElement.src = originalPath.replace('.jpg', '.png');
+      } else if (originalPath.endsWith('.png')) {
+        imgElement.src = originalPath.replace('.png', '.jpg');
+      }
+    }
+
     function shuffleDeck() {
       remainingDeck = [...deckData];
       for (let i = remainingDeck.length - 1; i > 0; i--) {
@@ -306,16 +333,22 @@
       }
     }
 
-    // ฟังก์ชั่นสลับนามสกุลไฟล์กรณีใช้ .png
-    function handleImageError(imgElement, originalPath) {
-      if (originalPath.endsWith('.jpg')) {
-        imgElement.src = originalPath.replace('.jpg', '.png');
-      } else if (originalPath.endsWith('.png')) {
-        imgElement.src = originalPath.replace('.png', '.jpg');
-      }
+    // เริ่มต้นการเปิดไพ่พร้อมแอนิเมชันสับไพ่
+    function startDrawing(count) {
+      const status = document.getElementById('shuffling-status');
+      const mainContainer = document.getElementById('main-cards-container');
+      const clarifierSection = document.getElementById('clarifier-section');
+      
+      mainContainer.innerHTML = '';
+      clarifierSection.style.display = 'none';
+      status.style.display = 'block';
+
+      setTimeout(() => {
+        status.style.display = 'none';
+        drawCards(count);
+      }, 600);
     }
 
-    // ฟังก์ชั่นเปิดไพ่หลัก (1, 3, 5 ใบ)
     function drawCards(count) {
       shuffleDeck();
       clarifierCount = 0;
@@ -332,7 +365,6 @@
       addClarifierBtn.disabled = false;
       addClarifierBtn.innerText = "+ เปิดไพ่ขยาย ( Clarifier Card )";
 
-      // สร้างตำแหน่งตำแหน่งไพ่ตามที่เลือก
       for (let i = 0; i < count; i++) {
         const cardData = remainingDeck.pop();
         
@@ -351,7 +383,7 @@
           <div class="card-wrapper" onclick="this.querySelector('.card').classList.toggle('flipped')">
             <div class="card">
               <div class="card-face card-back">
-                <img src="${cardBackPath}" onerror="handleImageError(this, '${cardBackPath}')" alt="หลังไพ่">
+                <img src="assets/back/card_back.jpg" onerror="handleImageError(this, 'assets/back/card_back.jpg')" alt="หลังไพ่">
               </div>
               <div class="card-face card-front">
                 <img src="${cardData.file}" onerror="handleImageError(this, '${cardData.file}')" alt="${cardData.name}">
@@ -363,14 +395,11 @@
         mainContainer.appendChild(slot);
       }
 
-      // แสดงโซนไพ่ขยาย
       clarifierSection.style.display = 'flex';
     }
 
-    // ฟังก์ชั่นสุ่มเปิดไพ่ขยาย
     function drawClarifierCard() {
-      if (remainingDeck.length === 0) return;
-      if (clarifierCount >= 3) return; // จำกัดสูงสุด 3 ใบ
+      if (remainingDeck.length === 0 || clarifierCount >= 3) return;
 
       clarifierCount++;
       const cardData = remainingDeck.pop();
@@ -386,7 +415,7 @@
         <div class="card-wrapper" onclick="this.querySelector('.card').classList.toggle('flipped')">
           <div class="card">
             <div class="card-face card-back">
-              <img src="${cardBackPath}" onerror="handleImageError(this, '${cardBackPath}')" alt="หลังไพ่">
+              <img src="assets/back/card_back.jpg" onerror="handleImageError(this, 'assets/back/card_back.jpg')" alt="หลังไพ่">
             </div>
             <div class="card-face card-front">
               <img src="${cardData.file}" onerror="handleImageError(this, '${cardData.file}')" alt="${cardData.name}">
