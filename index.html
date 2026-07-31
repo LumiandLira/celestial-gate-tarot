@@ -110,7 +110,7 @@
       flex-wrap: wrap;
     }
 
-    button.action-btn, button.shuffle-btn {
+    button.action-btn, button.shuffle-btn, button.clarifier-btn {
       background: linear-gradient(135deg, #a855f7, #6b21a8);
       color: white;
       border: none;
@@ -119,10 +119,23 @@
       font-size: 0.95rem;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+      transition: all 0.3s ease;
     }
 
     button.shuffle-btn {
       background: linear-gradient(135deg, #e879f9, #a855f7);
+    }
+
+    button.clarifier-btn {
+      background: linear-gradient(135deg, #c084fc, #7e22ce);
+      margin-top: 1rem;
+      padding: 0.8rem 1.8rem;
+    }
+
+    button.clarifier-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
     }
 
     button.reset-btn {
@@ -251,7 +264,7 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
     }
 
-    .cards-grid .card-flip-container { width: 200px; height: 345px; }
+    .cards-grid .card-flip-container { width: 180px; height: 310px; }
     .card-flip-container.flipped { transform: rotateY(180deg); }
     .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container.flipped { transform: rotateY(180deg); }
 
@@ -265,7 +278,18 @@
     .card-face img { width: 100%; height: 100%; object-fit: cover; }
     .card-back { transform: rotateY(0deg); }
     .card-front { transform: rotateY(180deg); }
-    .card-name-text { font-size: 0.85rem; max-width: 130px; text-align: center; }
+    .card-name-text { font-size: 0.85rem; max-width: 140px; text-align: center; }
+
+    /* --- SECTION ไพ่ขยาย (CLARIFIER) --- */
+    .clarifier-wrapper {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px dashed rgba(216, 180, 254, 0.3);
+    }
   </style>
 </head>
 <body>
@@ -291,6 +315,7 @@
       <button class="shuffle-btn" onclick="prepareMode('shuffle')">🂠 สับไพ่ (Shuffle)</button>
       <button class="action-btn" onclick="prepareMode(1)">เลือก 1 ใบ</button>
       <button class="action-btn" onclick="prepareMode(3)">เลือก 3 ใบ</button>
+      <button class="action-btn" onclick="prepareMode(5)">เลือก 5 ใบ</button>
       <button class="action-btn" onclick="prepareMode(10)">เลือก 10 ใบ (Celtic Cross)</button>
       <button class="reset-btn" onclick="resetDeck()">รีเซ็ต</button>
     </div>
@@ -303,13 +328,20 @@
 
     <!-- กระดานแสดงไพ่ที่เลือก -->
     <div id="cardsDisplay"></div>
+
+    <!-- โซนสำหรับปุ่มไพ่ขยาย -->
+    <div class="clarifier-wrapper" id="clarifierWrapper" style="display: none;">
+      <button class="clarifier-btn" id="clarifierBtn" onclick="drawClarifierCard()">+ เปิดไพ่ขยาย ( Clarifier Card )</button>
+      <div class="cards-grid" id="clarifierDisplay" style="margin-top: 1.5rem; min-height: auto;"></div>
+    </div>
   </div>
 
   <script>
     let activeDeck = [];
     let selectedCards = [];
+    let clarifierCards = [];
     let targetCount = 0;
-    let currentMode = '';
+    let currentMode = 0;
 
     function enterGate() {
       document.getElementById('intro-screen').classList.add('hidden');
@@ -418,7 +450,6 @@
       const totalCards = activeDeck.length;
       const spreadWidth = Math.min(window.innerWidth - 40, 950);
       const step = spreadWidth / totalCards;
-      const startLeft = (container.clientWidth - spreadWidth) / 2;
 
       activeDeck.forEach((card, index) => {
         const cardDiv = document.createElement('div');
@@ -441,7 +472,10 @@
 
     function prepareMode(mode) {
       document.getElementById('cardsDisplay').innerHTML = '';
+      document.getElementById('clarifierDisplay').innerHTML = '';
+      document.getElementById('clarifierWrapper').style.display = 'none';
       selectedCards = [];
+      clarifierCards = [];
 
       if (mode === 'shuffle') {
         activeDeck = shuffleArray(tarotDeck);
@@ -462,14 +496,17 @@
 
     function selectCard(index, cardElem) {
       if (targetCount === 0) {
-        alert("กรุณากดเลือกจำนวนไพ่ที่ต้องการดูก่อนครับ (1 ใบ, 3 ใบ หรือ Celtic Cross)");
+        alert("กรุณากดเลือกจำนวนไพ่ที่ต้องการดูก่อนครับ (1 ใบ, 3 ใบ, 5 ใบ หรือ Celtic Cross)");
         return;
       }
 
       if (cardElem.classList.contains('selected')) return;
 
       cardElem.classList.add('selected');
-      selectedCards.push(activeDeck[index]);
+      
+      // ดึงไพ่ออกจากสำรับที่ใช้งานอยู่
+      const pickedCard = activeDeck[index];
+      selectedCards.push(pickedCard);
 
       document.getElementById('instruction').innerText = `เลือกแล้ว ${selectedCards.length}/${targetCount} ใบ`;
 
@@ -482,7 +519,16 @@
             displayStandardGrid();
           }
           document.getElementById('instruction').innerText = "กางไพ่เรียบร้อยแล้ว";
-          targetCount = 0; // Reset
+
+          // แสดงปุ่มเปิดไพ่ขยายเฉพาะโหมด 1, 3 และ 5 ใบ
+          if ([1, 3, 5].includes(currentMode)) {
+            document.getElementById('clarifierWrapper').style.display = 'flex';
+            const btn = document.getElementById('clarifierBtn');
+            btn.disabled = false;
+            btn.innerText = "+ เปิดไพ่ขยาย ( Clarifier Card )";
+          }
+
+          targetCount = 0; // Reset target
         }, 500);
       }
     }
@@ -496,8 +542,17 @@
         const cardDiv = document.createElement('div');
         cardDiv.className = 'card-item';
         
+        let labelText = `CARD ${i + 1}`;
+        if (selectedCards.length === 3) {
+          const l3 = ["Past / อดีต", "Present / ปัจจุบัน", "Future / อนาคต"];
+          labelText = l3[i];
+        } else if (selectedCards.length === 5) {
+          const l5 = ["Present / ปัจจุบัน", "Challenge / อุปสรรค", "Past / อดีต", "Future / อนาคต", "Outcome / บทสรุป"];
+          labelText = l5[i];
+        }
+
         cardDiv.innerHTML = `
-          <span class="card-title">CARD ${i + 1}</span>
+          <span class="card-title">${labelText}</span>
           <div class="card-flip-container" id="cardContainer-${i}">
             <div class="card-face card-back">
               <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
@@ -567,6 +622,49 @@
       });
     }
 
+    // ฟังก์ชั่นสุ่มสุ่มเปิดไพ่ขยาย (Clarifier)
+    function drawClarifierCard() {
+      if (clarifierCards.length >= 3) return;
+
+      // กรองไพ่ที่ยังไม่ได้ถูกเลือก
+      const unpickedDeck = activeDeck.filter(c => !selectedCards.includes(c) && !clarifierCards.includes(c));
+      if (unpickedDeck.length === 0) return;
+
+      const randomCard = unpickedDeck[Math.floor(Math.random() * unpickedDeck.length)];
+      clarifierCards.push(randomCard);
+
+      const clarifierDisplay = document.getElementById('clarifierDisplay');
+      const index = clarifierCards.length;
+
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'card-item';
+      cardDiv.innerHTML = `
+        <span class="card-title">CLARIFIER ${index}</span>
+        <div class="card-flip-container" id="clarifierContainer-${index}">
+          <div class="card-face card-back">
+            <img src="assets/back/Card_Back.jpg" alt="Card Back" onerror="handleImageError(this)">
+          </div>
+          <div class="card-face card-front">
+            <img src="${randomCard.path}" alt="${randomCard.name}" onerror="handleImageError(this)">
+          </div>
+        </div>
+        <p class="card-name-text">${randomCard.name}</p>
+      `;
+
+      clarifierDisplay.appendChild(cardDiv);
+
+      setTimeout(() => {
+        const containerElem = document.getElementById(`clarifierContainer-${index}`);
+        if (containerElem) containerElem.classList.add('flipped');
+      }, 200);
+
+      const btn = document.getElementById('clarifierBtn');
+      if (clarifierCards.length >= 3) {
+        btn.disabled = true;
+        btn.innerText = "เปิดไพ่ขยายครบแล้ว (สูงสุด 3 ใบ)";
+      }
+    }
+
     function handleImageError(img) {
       if (!img.dataset.tryCount) img.dataset.tryCount = "1";
       const count = parseInt(img.dataset.tryCount);
@@ -586,8 +684,12 @@
 
     function resetDeck() {
       document.getElementById('cardsDisplay').innerHTML = '';
+      document.getElementById('clarifierDisplay').innerHTML = '';
+      document.getElementById('clarifierWrapper').style.display = 'none';
       selectedCards = [];
+      clarifierCards = [];
       targetCount = 0;
+      currentMode = 0;
       activeDeck = shuffleArray(tarotDeck);
       renderFanDeck();
       document.getElementById('instruction').innerText = "กรุณากดเลือกรูปแบบการดูไพ่ หรือกดสับไพ่ก่อนครับ";
