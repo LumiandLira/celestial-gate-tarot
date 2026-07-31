@@ -255,6 +255,7 @@
       height: 640px;
     }
 
+    /* จัดตำแหน่งวงกลมตรงตามผังภาพอ้างอิงของคุณ */
     .celtic-cross-circle .card-item[data-pos="1"] {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;
     }
@@ -262,8 +263,8 @@
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;
     }
     .celtic-cross-circle .card-item[data-pos="3"] { position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 1; }
-    .celtic-cross-circle .card-item[data-pos="4"] { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 1; }
-    .celtic-cross-circle .card-item[data-pos="5"] { position: absolute; right: 0; top: 50%; transform: translateY(-50%); z-index: 1; }
+    .celtic-cross-circle .card-item[data-pos="4"] { position: absolute; right: 0; top: 50%; transform: translateY(-50%); z-index: 1; }
+    .celtic-cross-circle .card-item[data-pos="5"] { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); z-index: 1; }
     .celtic-cross-circle .card-item[data-pos="6"] { position: absolute; left: 0; top: 50%; transform: translateY(-50%); z-index: 1; }
 
     .celtic-cross-staff { display: flex; flex-direction: column-reverse; gap: 1rem; }
@@ -632,7 +633,7 @@
 
     const celticPositions = [
       "1. Present", "2. Challenge", "3. Crown / Goal", 
-      "4. Future", "5. Foundation", "6. Past",
+      "4. Foundation", "5. Past", "6. Forthcoming",
       "7. Self", "8. Environment", "9. Hopes / Fears", "10. Outcome"
     ];
 
