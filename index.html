@@ -209,46 +209,84 @@
       letter-spacing: 1px;
     }
 
-    /* --- CELTIC CROSS LAYOUT (10 CARDS - Adjusted to Match Image) --- */
+    /* --- CELTIC CROSS LAYOUT (EXACT IMAGE 2 SPREAD) --- */
     .celtic-cross-layout {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 3rem;
+      gap: 4rem;
       width: 100%;
       margin-top: 1rem;
       flex-wrap: wrap;
     }
 
-    /* ฝั่งวงกากบาท (Cross) */
     .celtic-cross-circle {
       position: relative;
       width: 480px;
-      height: 600px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      height: 620px;
     }
 
-    /* จัดตำแหน่งไพ่ให้ตรงตามผังไดอะแกรมรูปภาพที่ 2 */
-    .celtic-cross-circle .card-item[data-pos="1"] { position: absolute; z-index: 1; }
-    .celtic-cross-circle .card-item[data-pos="2"] { position: absolute; z-index: 2; transform: rotate(90deg) scale(0.95); }
-    .celtic-cross-circle .card-item[data-pos="3"] { position: absolute; top: 0; }
-    .celtic-cross-circle .card-item[data-pos="4"] { position: absolute; right: 0; }
-    .celtic-cross-circle .card-item[data-pos="5"] { position: absolute; bottom: 0; }
-    .celtic-cross-circle .card-item[data-pos="6"] { position: absolute; left: 0; }
+    /* 1. Center Bottom */
+    .celtic-cross-circle .card-item[data-pos="1"] {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
 
-    /* ฝั่งเสาขวามือ (Staff 7-10 เรียงขึ้นไป) */
+    /* 2. Center Horizontal Cross */
+    .celtic-cross-circle .card-item[data-pos="2"] {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(90deg);
+      z-index: 2;
+    }
+
+    /* 3. Top (3) */
+    .celtic-cross-circle .card-item[data-pos="3"] {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* 4. Right (4) */
+    .celtic-cross-circle .card-item[data-pos="4"] {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* 5. Bottom (5) */
+    .celtic-cross-circle .card-item[data-pos="5"] {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* 6. Left (6) */
+    .celtic-cross-circle .card-item[data-pos="6"] {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Staff Side (7-10) */
     .celtic-cross-staff {
       display: flex;
-      flex-direction: column-reverse; /* เรียงจาก 7 อยู่ล่างสุด ขึ้นไป 10 อยู่บนสุด */
+      flex-direction: column-reverse;
       gap: 1rem;
     }
 
     /* --- 3D CARD FLIP CONTAINER --- */
     .card-flip-container {
-      width: 130px;
-      height: 225px;
+      width: 125px;
+      height: 215px;
       position: relative;
       transform-style: preserve-3d;
       transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -262,6 +300,11 @@
     }
 
     .card-flip-container.flipped {
+      transform: rotateY(180deg);
+    }
+
+    /* หมุนไพ่ใบที่ 2 แต่ทรงกล่องคงเดิม */
+    .celtic-cross-circle .card-item[data-pos="2"] .card-flip-container.flipped {
       transform: rotateY(180deg);
     }
 
@@ -287,7 +330,7 @@
 
     .card-name-text {
       font-size: 0.85rem;
-      max-width: 140px;
+      max-width: 130px;
       text-align: center;
       line-height: 1.2;
     }
@@ -465,11 +508,18 @@
       }
     }
 
-    // กำหนดชื่อตำแหน่งให้ตรงตามไดอะแกรมรูปภาพใหม่
+    // กำหนดชื่อตำแหน่งตามผังรูปภาพที่ 2 เป๊ะๆ
     const celticPositions = [
-      "1. Present", "2. Challenge", "3. Crown/Goal",
-      "4. Future", "5. Foundation", "6. Past",
-      "7. Self", "8. Environment", "9. Hopes/Fears", "10. Outcome"
+      "1. Present", 
+      "2. Challenge", 
+      "3. Crown / Goal", 
+      "4. Future", 
+      "5. Foundation", 
+      "6. Past",
+      "7. Self", 
+      "8. Environment", 
+      "9. Hopes / Fears", 
+      "10. Outcome"
     ];
 
     function drawCelticCross() {
