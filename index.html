@@ -240,57 +240,58 @@
       z-index: 2;
     }
 
+    /* Layout เค้าโครง Celtic Cross ตามภาพ image_6.png */
     .celtic-cross-layout {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 3rem;
+      gap: 4rem;
       width: 100%;
       margin-top: 0.5rem;
       flex-wrap: wrap;
     }
 
-    /* ปรับขนาดพื้นที่ให้พอดีกับ 3 คอลัมน์ และ 3 แถว */
     .celtic-cross-circle {
       position: relative;
-      width: 550px;
-      height: 850px; 
+      width: 480px;
+      height: 650px; 
     }
 
     .celtic-cross-circle .card-item {
       position: absolute;
-      width: 140px; /* คุมความกว้างไอเทมป้องกันการซ้อนทับ */
+      width: 130px;
     }
 
-    /* จัดวางตำแหน่งตาม image_4.png ทุกใบวางแนวตั้ง */
-    /* 1. ตรงกลาง */
+    /* ตำแหน่งตามไดอะแกรม image_6.png (ทุกใบตั้งตรง ไม่มีนอน) */
+    /* 1. Significator (ตรงกลาง) */
     .celtic-cross-circle .card-item[data-pos="1"] {
       top: 50%; left: 50%; transform: translate(-50%, -50%);
     }
-    /* 2. ซ้ายของใบที่ 1 */
+    /* 2. Crossing Card (ซ้ายกลาง) */
     .celtic-cross-circle .card-item[data-pos="2"] {
       top: 50%; left: 0; transform: translateY(-50%);
     }
-    /* 3. บนของใบที่ 1 */
+    /* 3. Crowning Card (บน) */
     .celtic-cross-circle .card-item[data-pos="3"] { 
       top: 0; left: 50%; transform: translateX(-50%); 
     }
-    /* 4. ขวาของใบที่ 1 */
+    /* 4. Base of the Matter (ขวากลาง) */
     .celtic-cross-circle .card-item[data-pos="4"] { 
       top: 50%; right: 0; transform: translateY(-50%); 
     }
-    /* 5. ล่างของใบที่ 1 */
+    /* 5. Past Influences (ล่างสุด) */
     .celtic-cross-circle .card-item[data-pos="5"] { 
       bottom: 0; left: 50%; transform: translateX(-50%); 
     }
-    /* 6. ซ้ายบน (เหนือใบที่ 2, ซ้ายของใบที่ 3) */
+    /* 6. Forthcoming Influences (ซ้ายบน) */
     .celtic-cross-circle .card-item[data-pos="6"] {
       top: 0; left: 0; 
     }
 
+    /* เสาหลักด้านขวา เรียงจากล่างขึ้นบน: 7, 8, 9, 10 */
     .celtic-cross-staff { 
       display: flex; 
-      flex-direction: column-reverse; /* ไพ่ 7 อยู่ล่าง ไพ่ 10 อยู่บนสุด */
+      flex-direction: column-reverse; 
       gap: 1.5rem; 
     }
 
@@ -318,7 +319,6 @@
     .card-face img { width: 100%; height: 100%; object-fit: cover; }
     .card-back { transform: rotateY(0deg); }
     .card-front { transform: rotateY(180deg); }
-    .card-name-text { font-size: 0.8rem; max-width: 130px; text-align: center; }
 
     @media (max-width: 768px) {
       .celtic-cross-layout {
@@ -334,7 +334,6 @@
         justify-items: center;
       }
       
-      /* สำหรับมือถือ เรียงแบบ Grid ให้ดูง่ายขึ้น */
       .celtic-cross-circle .card-item {
         position: relative !important;
         top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
@@ -355,10 +354,6 @@
       }
       .card-title {
         font-size: 0.65rem;
-      }
-      .card-name-text {
-        font-size: 0.7rem;
-        max-width: 100px;
       }
     }
 
@@ -640,7 +635,6 @@
               <img src="${card.path}" alt="${card.name}" onerror="handleImageError(this)">
             </div>
           </div>
-          <p class="card-name-text">${card.name}</p>
         `;
         
         display.appendChild(cardDiv);
@@ -653,9 +647,9 @@
     }
 
     const celticPositions = [
-      "1. Significator", "2. Crossing Card", "3. Crowning Card", 
-      "4. Base of the Matter", "5. Past Influences", "6. Forthcoming Influences",
-      "7. Where One Finds Oneself", "8. Views of Others", "9. Hopes and Fears", "10. Final Outcome"
+      "1. SIGNIFICATOR", "2. CROSSING CARD", "3. CROWNING CARD", 
+      "4. BASE OF THE MATTER", "5. PAST INFLUENCES", "6. FORTHCOMING INFLUENCES",
+      "7. SELF", "8. VIEWS OF OTHERS", "9. HOPES AND FEARS", "10. FINAL OUTCOME"
     ];
 
     function displayCelticCross() {
@@ -685,7 +679,6 @@
               <img src="${card.path}" alt="${card.name}" onerror="handleImageError(this)">
             </div>
           </div>
-          <p class="card-name-text">${card.name}</p>
         `;
 
         if (posNum <= 6) {
@@ -725,7 +718,6 @@
             <img src="${randomCard.path}" alt="${randomCard.name}" onerror="handleImageError(this)">
           </div>
         </div>
-        <p class="card-name-text">${randomCard.name}</p>
       `;
 
       clarifierDisplay.appendChild(cardDiv);
